@@ -14,14 +14,24 @@ export const collectRoutes = new Hono<AppEnv>().use("/e", cors({ origin: "*" }))
   const payload = parseCollectPayload(body);
   if (payload === null) return c.body(null, 400);
 
+  const container = buildContainer(c.env);
   try {
-    await buildContainer(c.env).recordVisit({
+    const outcome = await container.recordVisit({
       origin: c.req.header("origin") ?? null,
       ip: c.req.header("cf-connecting-ip") ?? "",
       userAgent: c.req.header("user-agent") ?? "",
       country: typeof c.req.raw.cf?.country === "string" ? c.req.raw.cf.country : null,
       payload,
     });
+    if (outcome.status === "recorded" && payload.ref) {
+      c.executionCtx.waitUntil(
+        container
+          .noticeLinkOpened(outcome.siteId, payload.ref, outcome.receivedAt)
+          .catch((error: unknown) => {
+            console.error("Could not notice the opened link", error);
+          }),
+      );
+    }
   } catch (error) {
     if (error instanceof UnknownSiteError || error instanceof InvalidOriginError) return c.body(null, 403);
     throw error;

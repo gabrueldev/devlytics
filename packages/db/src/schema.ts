@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
@@ -26,3 +26,18 @@ export const coffees = sqliteTable("coffees", {
   paidAt: integer("paid_at", { mode: "timestamp_ms" }),
   reversedAt: integer("reversed_at", { mode: "timestamp_ms" }),
 });
+
+export const trackedLinks = sqliteTable(
+  "tracked_links",
+  {
+    id: text("id").primaryKey(),
+    siteId: text("site_id")
+      .notNull()
+      .references(() => sites.id, { onDelete: "cascade" }),
+    slug: text("slug").notNull(),
+    label: text("label").notNull(),
+    firstOpenedAt: integer("first_opened_at", { mode: "timestamp_ms" }),
+    createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
+  },
+  (table) => [uniqueIndex("tracked_links_site_slug_unique").on(table.siteId, table.slug)],
+);

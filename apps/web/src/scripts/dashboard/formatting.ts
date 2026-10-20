@@ -4,10 +4,17 @@ export class Formatter {
   private readonly numbers: Intl.NumberFormat;
   private readonly days: Intl.DateTimeFormat;
   private readonly regions: Intl.DisplayNames | null;
+  private readonly moments: Intl.DateTimeFormat;
 
   constructor(readonly locale: string) {
     this.numbers = new Intl.NumberFormat(locale);
     this.days = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", timeZone: "UTC" });
+    this.moments = new Intl.DateTimeFormat(locale, {
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     try {
       this.regions = new Intl.DisplayNames([locale], { type: "region" });
     } catch {
@@ -29,6 +36,10 @@ export class Formatter {
 
   day(isoDay: string): string {
     return this.days.format(new Date(`${isoDay}T00:00:00Z`));
+  }
+
+  moment(iso: string): string {
+    return this.moments.format(new Date(iso));
   }
 
   country(code: string): string | null {

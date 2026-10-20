@@ -44,7 +44,7 @@ describe("recordVisit", () => {
   it("stores the batch with everything the dashboard needs and nothing personal", async () => {
     const { events, record } = setUp();
 
-    await expect(record(incoming())).resolves.toBe("recorded");
+    await expect(record(incoming())).resolves.toMatchObject({ status: "recorded" });
 
     expect(events.visits).toEqual([
       {
@@ -82,7 +82,9 @@ describe("recordVisit", () => {
   it("drops bots without storing anything", async () => {
     const { events, record } = setUp();
 
-    await expect(record(incoming({ userAgent: "Googlebot/2.1" }))).resolves.toBe("ignored-bot");
+    await expect(record(incoming({ userAgent: "Googlebot/2.1" }))).resolves.toEqual({
+      status: "ignored-bot",
+    });
     expect(events.visits).toEqual([]);
   });
 });

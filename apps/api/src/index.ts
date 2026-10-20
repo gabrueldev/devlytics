@@ -6,6 +6,7 @@ import { coffeeCheckoutRoutes } from "./routes/coffee-checkout";
 import { coffeeRoutes } from "./routes/coffees";
 import { demoRoutes } from "./routes/demo";
 import { healthRoutes } from "./routes/health";
+import { linkRoutes } from "./routes/links";
 import { siteRoutes } from "./routes/sites";
 
 const app = new Hono<AppEnv>()
@@ -18,6 +19,7 @@ const app = new Hono<AppEnv>()
   .use("/sites/*", sameOrigin)
   .use("/sites", sameOrigin)
   .route("/", authRoutes)
-  .route("/", siteRoutes);
+  .route("/", siteRoutes)
+  .route("/", linkRoutes);
 
 export default app;

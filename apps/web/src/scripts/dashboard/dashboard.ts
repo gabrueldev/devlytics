@@ -8,6 +8,7 @@ import {
 } from "./dashboard-api";
 import { fillDays, renderDailyChart } from "./daily-chart";
 import { Formatter } from "./formatting";
+import { LinksPanel } from "./links-panel";
 import { mountNewSiteForm } from "./new-site-form";
 import { renderProjectsTable } from "./projects-table";
 import { renderRankedList, type RankedRow } from "./ranked-list";
@@ -42,6 +43,22 @@ async function startDashboard(root: HTMLElement): Promise<void> {
   let days = periods.includes(Number(params.get("days"))) ? Number(params.get("days")) : 7;
   let loadingReport = 0;
   let drawChart: (() => void) | null = null;
+  let tab: "overview" | "links" = params.get("link")
+    ? "links"
+    : params.get("tab") === "links"
+      ? "links"
+      : "overview";
+  let pendingLinkId = params.get("link");
+  const linksPanel = new LinksPanel(
+    {
+      form: find<HTMLFormElement>("[data-link-form]"),
+      error: find("[data-link-error]"),
+      list: find("[data-link-list]"),
+    },
+    api,
+    texts,
+    format,
+  );
 
   find("[data-login-failed]").hidden = params.get("login") !== "failed";
 
@@ -56,6 +73,9 @@ async function startDashboard(root: HTMLElement): Promise<void> {
   const remember = () => {
     const url = new URL(location.href);
     url.searchParams.delete("login");
+    url.searchParams.delete("link");
+    if (tab === "links") url.searchParams.set("tab", "links");
+    else url.searchParams.delete("tab");
     if (siteId) url.searchParams.set("site", siteId);
     url.searchParams.set("days", String(days));
     history.replaceState(null, "", url);
@@ -146,8 +166,22 @@ async function startDashboard(root: HTMLElement): Promise<void> {
     );
   };
 
+  const showTab = () => {
+    root.dataset.tab = tab;
+    root.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((button) => {
+      button.setAttribute("aria-selected", String(button.dataset.tab === tab));
+    });
+    remember();
+    const site = account?.sites.find((entry) => entry.id === siteId);
+    if (tab === "links" && site) {
+      void linksPanel.show(site, pendingLinkId);
+      pendingLinkId = null;
+    }
+  };
+
   const loadReport = async () => {
     if (!siteId) return;
+    if (tab === "links") showTab();
     const ticket = ++loadingReport;
     root.querySelectorAll<HTMLButtonElement>("[data-period]").forEach((button) => {
       button.setAttribute("aria-pressed", String(Number(button.dataset.period) === days));
@@ -188,6 +222,7 @@ async function startDashboard(root: HTMLElement): Promise<void> {
     if (!next.sites.some((site) => site.id === siteId)) siteId = next.sites[0]?.id ?? null;
     renderSites(next.sites);
     show("report");
+    root.dataset.tab = tab;
     void loadReport();
   };
 
@@ -231,6 +266,13 @@ async function startDashboard(root: HTMLElement): Promise<void> {
     cancelAnimationFrame(resizeFrame);
     resizeFrame = requestAnimationFrame(() => drawChart?.());
   }).observe(find("[data-daily-chart]"));
+
+  root.querySelectorAll<HTMLButtonElement>("[data-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      tab = button.dataset.tab === "links" ? "links" : "overview";
+      showTab();
+    });
+  });
 
   find("[data-retry]").addEventListener("click", () => void loadReport());
 

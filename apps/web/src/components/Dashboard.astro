@@ -57,7 +57,11 @@ const githubIcon =
           <h1 data-site-name></h1>
           <a class="dash-domain" data-site-domain target="_blank" rel="noopener"></a>
         </div>
-        <div class="dash-periods" role="group" aria-label={t.periodLabel}>
+        <div class="dash-tabs" role="tablist">
+          <button type="button" role="tab" data-tab="overview" aria-selected="true">{t.tabs.overview}</button>
+          <button type="button" role="tab" data-tab="links" aria-selected="false">{t.tabs.links}</button>
+        </div>
+        <div class="dash-periods" role="group" aria-label={t.periodLabel} data-overview-only>
           {
             ([7, 30, 90] as const).map((days) => (
               <button type="button" data-period={days} aria-pressed="false">
@@ -68,17 +72,33 @@ const githubIcon =
         </div>
       </div>
 
-      <section class="dash-card dash-install glass-plate" data-install hidden>
+      <section class="dash-links" data-links-panel>
+        <section class="dash-card glass-plate">
+          <h2>{t.links.title}</h2>
+          <p class="dash-sub">{t.links.sub}</p>
+          <form class="dash-link-form" data-link-form novalidate>
+            <label class="dash-field">
+              <span>{t.links.label}</span>
+              <input name="label" maxlength="120" required placeholder={t.links.labelPlaceholder} />
+            </label>
+            <button class="btn btn-primary" type="submit">{t.links.create}</button>
+          </form>
+          <p class="dash-error" data-link-error hidden></p>
+        </section>
+        <ul class="dash-link-list" data-link-list></ul>
+      </section>
+
+      <section class="dash-card dash-install glass-plate" data-install data-overview-only hidden>
         <h2>{t.install.title}</h2>
         <p class="dash-sub">{t.install.sub}</p>
         <InstallTag label={t.install.title} copy={t.install.copy} copied={t.install.copied} />
       </section>
 
-      <p class="dash-error" data-report-error hidden>
+      <p class="dash-error" data-report-error data-overview-only hidden>
         {t.error} <button class="dash-link" type="button" data-retry>{t.retry}</button>
       </p>
 
-      <div class="dash-body" data-report-body>
+      <div class="dash-body" data-report-body data-overview-only>
         <div class="dash-kpis">
           <div class="dash-kpi glass-plate"><span>{t.metrics.visits}</span><strong data-kpi="visits">–</strong></div>
           <div class="dash-kpi glass-plate"><span>{t.metrics.attention}</span><strong data-kpi="attention">–</strong></div>
@@ -302,6 +322,182 @@ const githubIcon =
 
   .dash-domain:hover {
     text-decoration: underline;
+  }
+
+  .dash[data-tab="links"] [data-overview-only],
+  .dash:not([data-tab="links"]) [data-links-panel] {
+    display: none !important;
+  }
+
+  .dash-tabs {
+    display: flex;
+    gap: 1.25rem;
+    width: 100%;
+    order: 3;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dash-tabs button {
+    margin-bottom: -1px;
+    padding: 0.6rem 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-mute);
+    cursor: pointer;
+  }
+
+  .dash-tabs button[aria-selected="true"] {
+    border-bottom-color: var(--text);
+    color: var(--text);
+  }
+
+  .dash-links {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .dash-link-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .dash-link-form .dash-field {
+    flex: 1 1 16rem;
+  }
+
+  .dash-link-list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dash-link-list :global(.link-item) {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.1rem 1.25rem;
+  }
+
+  .dash-link-list :global(.link-head) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+  }
+
+  .dash-link-list :global(.link-toggle) {
+    flex: 1 1 14rem;
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .dash-link-list :global(.link-label) {
+    font-weight: 600;
+  }
+
+  .dash-link-list :global(.link-status) {
+    font-size: 0.85rem;
+    color: var(--text-mute);
+  }
+
+  .dash-link-list :global(.link-status.is-opened) {
+    color: var(--live);
+  }
+
+  .dash-link-list :global(.link-url) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0.45rem 0.5rem 0.45rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-family: var(--font-code);
+    font-size: 0.82rem;
+  }
+
+  .dash-link-list :global(.link-url code) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dash-link-list :global(.link-copy),
+  .dash-link-list :global(.link-remove) {
+    flex-shrink: 0;
+    padding: 0.3rem 0.75rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--bg-raised);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .dash-link-list :global(.link-remove) {
+    background: none;
+    color: var(--text-mute);
+    font-weight: 500;
+  }
+
+  .dash-link-list :global(.link-remove.is-armed) {
+    color: #b91c1c;
+  }
+
+  .dash-link-list :global(.link-timeline) {
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .dash-link-list :global(.link-timeline h3) {
+    font-size: 0.95rem;
+  }
+
+  .dash-link-list :global(.visit) {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius);
+    background: var(--bg);
+    font-size: 0.9rem;
+  }
+
+  .dash-link-list :global(.visit-when) {
+    font-weight: 600;
+  }
+
+  .dash-link-list :global(.visit-meta),
+  .dash-link-list :global(.visit-empty) {
+    color: var(--text-soft);
+  }
+
+  .dash-link-list :global(.visit-chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .dash-link-list :global(.visit-chip) {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 0 0 1px var(--line);
+    font-size: 0.8rem;
   }
 
   .dash-periods {

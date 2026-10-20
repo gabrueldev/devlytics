@@ -1,3 +1,4 @@
+import { env } from "cloudflare:test";
 import { exports } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
 
@@ -47,5 +48,31 @@ describe("POST /e", () => {
     const response = await collect(JSON.stringify(batch), { "user-agent": "Googlebot/2.1" });
 
     expect(response.status).toBe(204);
+  });
+});
+
+describe("tracked links", () => {
+  it("marks a registered ref as opened on its first visit", async () => {
+    const site = await env.DB.prepare("SELECT id FROM sites WHERE domain = 'fulano.dev'").first<{
+      id: string;
+    }>();
+    await env.DB.prepare(
+      "INSERT INTO tracked_links (id, site_id, slug, label, created_at) VALUES ('link_1', ?, 'nubank', 'Nubank', 0)",
+    )
+      .bind(site?.id)
+      .run();
+
+    expect((await collect(JSON.stringify({ ...batch, ref: "nubank" }))).status).toBe(204);
+
+    await expect
+      .poll(async () => {
+        const link = await env.DB.prepare(
+          "SELECT first_opened_at FROM tracked_links WHERE id = 'link_1'",
+        ).first<{
+          first_opened_at: number | null;
+        }>();
+        return link?.first_opened_at ?? null;
+      })
+      .not.toBeNull();
   });
 });

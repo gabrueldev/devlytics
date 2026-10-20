@@ -10,6 +10,10 @@
     { "pattern": "devlytics.gabrueldev.com/health", "zone_name": "gabrueldev.com" },
   ],
   "observability": { "enabled": true },
+  "vars": {
+    "APP_ORIGIN": "https://devlytics.gabrueldev.com",
+    "MAIL_FROM": "Devlytics <avisos@gabrueldev.com>",
+  },
   "assets": { "directory": "../../packages/tracker/dist" },
   "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "devlytics_events" }],
   "d1_databases": [

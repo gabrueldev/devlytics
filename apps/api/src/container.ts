@@ -1,4 +1,5 @@
 import {
+  AnalyticsEngineLinkVisits,
   AnalyticsEngineSiteReport,
   AnalyticsEngineSqlClient,
   AnalyticsEngineStatsReader,
@@ -6,6 +7,7 @@ import {
   CaktoPaymentGateway,
   D1CoffeeLedger,
   D1SiteRepository,
+  D1TrackedLinkRepository,
   D1UserRepository,
   EdgeTokenCache,
   GithubOAuthIdentity,
@@ -14,13 +16,17 @@ import {
   chargeCardCoffee,
   chargePixCoffee,
   countCoffees,
+  createTrackedLink,
   getDemoOverview,
+  getLinkTimeline,
   getSiteReport,
   isCoffeePaid,
   listSites,
+  listTrackedLinks,
   recordCoffeePayments,
   registerSite,
   removeSite,
+  removeTrackedLink,
   SessionTokens,
   signInWithGithub,
 } from "@devlytics/core";
@@ -34,6 +40,7 @@ export function buildContainer(env: Env) {
   const ledger = new D1CoffeeLedger(db);
   const sites = new D1SiteRepository(db);
   const users = new D1UserRepository(db);
+  const links = new D1TrackedLinkRepository(db);
   const now = () => new Date();
   const newId = () => crypto.randomUUID();
   const gateway = new CaktoPaymentGateway(
@@ -73,6 +80,15 @@ export function buildContainer(env: Env) {
     getSiteReport: getSiteReport({
       sites,
       reports: new AnalyticsEngineSiteReport(sql, env.EVENTS_DATASET),
+      now,
+    }),
+    listTrackedLinks: listTrackedLinks({ sites, links }),
+    createTrackedLink: createTrackedLink({ sites, links, newId, now }),
+    removeTrackedLink: removeTrackedLink({ sites, links }),
+    getLinkTimeline: getLinkTimeline({
+      sites,
+      links,
+      visits: new AnalyticsEngineLinkVisits(sql, env.EVENTS_DATASET),
       now,
     }),
   };

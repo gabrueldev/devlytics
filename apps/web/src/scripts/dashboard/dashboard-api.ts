@@ -35,6 +35,25 @@ export interface SiteReport {
   countries: Ranked[];
 }
 
+export interface TrackedLink {
+  id: string;
+  slug: string;
+  label: string;
+  firstOpenedAt: string | null;
+  createdAt: string;
+}
+
+export interface LinkVisit {
+  openedAt: string;
+  lastSeenAt: string;
+  country: string | null;
+  device: string;
+  browser: string;
+  attentionMs: number;
+  projects: { name: string; attentionMs: number }[];
+  clicks: { action: string; project: string | null }[];
+}
+
 export class SignedOutError extends Error {
   override readonly name = "SignedOutError";
 }
@@ -64,6 +83,27 @@ export class DashboardApi {
 
   report(siteId: string, days: number): Promise<SiteReport> {
     return this.request<SiteReport>(`/sites/${encodeURIComponent(siteId)}/report?days=${days}`);
+  }
+
+  links(siteId: string): Promise<TrackedLink[]> {
+    return this.request<TrackedLink[]>(`/sites/${encodeURIComponent(siteId)}/links`);
+  }
+
+  addLink(siteId: string, label: string): Promise<TrackedLink> {
+    return this.request<TrackedLink>(`/sites/${encodeURIComponent(siteId)}/links`, {
+      method: "POST",
+      body: JSON.stringify({ label }),
+    });
+  }
+
+  async removeLink(siteId: string, linkId: string): Promise<void> {
+    await this.request<null>(`/sites/${encodeURIComponent(siteId)}/links/${encodeURIComponent(linkId)}`, {
+      method: "DELETE",
+    });
+  }
+
+  timeline(siteId: string, linkId: string): Promise<{ link: TrackedLink; visits: LinkVisit[] }> {
+    return this.request(`/sites/${encodeURIComponent(siteId)}/links/${encodeURIComponent(linkId)}/timeline`);
   }
 
   async signOut(): Promise<void> {

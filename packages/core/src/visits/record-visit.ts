@@ -13,7 +13,8 @@ export interface IncomingVisit {
   payload: CollectPayload;
 }
 
-export type VisitOutcome = "recorded" | "ignored-bot";
+export type VisitOutcome =
+  { status: "recorded"; siteId: string; receivedAt: Date } | { status: "ignored-bot" };
 
 export function recordVisit(deps: {
   sites: SiteRepository;
@@ -24,7 +25,7 @@ export function recordVisit(deps: {
   const resolveSite = resolveSiteByOrigin({ sites: deps.sites });
 
   return async (incoming: IncomingVisit): Promise<VisitOutcome> => {
-    if (isBot(incoming.userAgent)) return "ignored-bot";
+    if (isBot(incoming.userAgent)) return { status: "ignored-bot" };
 
     const site = await resolveSite(browserOrigin(incoming.origin) ?? incoming.payload.url);
     const receivedAt = deps.now();
@@ -47,7 +48,7 @@ export function recordVisit(deps: {
       events: payload.events,
     });
 
-    return "recorded";
+    return { status: "recorded", siteId: site.id, receivedAt };
   };
 }
 

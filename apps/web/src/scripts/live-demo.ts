@@ -1,11 +1,11 @@
 interface DemoOverview {
-  visitors: number;
+  visits: number;
   averageAttentionMs: number;
   topProject: string | null;
   repoClicks: number;
 }
 
-const endpoint = "/api/demo";
+const endpoint = "https://devlytics.gabrueldev.com/api/demo";
 
 export async function loadLiveDemo(): Promise<void> {
   const panel = document.querySelector<HTMLElement>("[data-live-demo]");
@@ -20,7 +20,7 @@ export async function loadLiveDemo(): Promise<void> {
   const locale = panel.dataset.locale ?? "pt-BR";
   const numbers = new Intl.NumberFormat(locale);
   const values: Record<string, string> = {
-    visitors: numbers.format(overview.visitors),
+    visits: numbers.format(overview.visits),
     attention: formatDuration(overview.averageAttentionMs),
     topProject: overview.topProject ?? "—",
     repoClicks: numbers.format(overview.repoClicks),

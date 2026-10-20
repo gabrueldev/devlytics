@@ -86,7 +86,7 @@ export const pt = {
     title: "Os números reais do autor",
     sub: "O gabrueldev.com usa o Devlytics desde 20/10/2026. Isto é o que ele está vendo agora.",
     metrics: {
-      visitors: "Visitantes nos últimos 7 dias",
+      visits: "Visitas nos últimos 7 dias",
       attention: "Atenção média por visita",
       topProject: "Projeto que mais prende",
       repoClicks: "Cliques em repositórios",

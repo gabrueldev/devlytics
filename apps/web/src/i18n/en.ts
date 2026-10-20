@@ -88,7 +88,7 @@ export const en: Dictionary = {
     title: "The author's real numbers",
     sub: "gabrueldev.com has used Devlytics since October 20, 2026. This is what it sees right now.",
     metrics: {
-      visitors: "Visitors in the last 7 days",
+      visits: "Visits in the last 7 days",
       attention: "Average attention per visit",
       topProject: "Most engaging project",
       repoClicks: "Repository clicks",

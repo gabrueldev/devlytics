@@ -187,6 +187,15 @@ importers:
 
   apps/api:
     dependencies:
+      '@devlytics/adapters':
+        specifier: workspace:*
+        version: link:../../packages/adapters
+      '@devlytics/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@devlytics/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       hono:
         specifier: 4.13.13
         version: 4.13.13

@@ -23,8 +23,13 @@ const t = dictionaryFor(locale);
 
 <style>
   .footer {
-    padding: 2.5rem 0;
-    border-top: 1px solid var(--line);
+    padding: 3rem 0 3.25rem;
+    background: linear-gradient(90deg, var(--brand), var(--brand-deep));
+    color: #fff;
+  }
+
+  .footer :global(.logo-name b) {
+    color: rgba(255, 255, 255, 0.72);
   }
 
   .footer-inner {
@@ -42,16 +47,16 @@ const t = dictionaryFor(locale);
   }
 
   .footer-links a {
-    color: var(--text-soft);
+    color: rgba(255, 255, 255, 0.78);
     text-decoration: none;
   }
 
   .footer-links a:hover {
-    color: var(--text);
+    color: #fff;
   }
 
   .footer-copy {
-    color: var(--text-mute);
+    color: rgba(255, 255, 255, 0.62);
     font-size: 0.85rem;
   }
 </style>

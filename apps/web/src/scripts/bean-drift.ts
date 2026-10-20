@@ -19,7 +19,7 @@ export function driftBeansOnScroll(): void {
     const y = window.scrollY;
     velocity += (y - lastScrollY - velocity) * 0.35;
     lastScrollY = y;
-    const target = Math.max(-maxLagPx, Math.min(maxLagPx, -velocity * 1.4));
+    const target = Math.max(-maxLagPx, Math.min(maxLagPx, velocity * 1.4));
     lagSpeed = (lagSpeed + (target - lag) * stiffness) * damping;
     lag += lagSpeed;
     section.style.setProperty("--lag", `${lag.toFixed(2)}px`);

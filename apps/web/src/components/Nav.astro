@@ -1,0 +1,104 @@
+---
+import { dictionaryFor, homePathFor, type Locale } from "../i18n";
+import Logo from "./Logo.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+const otherLocale: Locale = locale === "pt" ? "en" : "pt";
+---
+
+<header class="nav" data-nav>
+  <div class="nav-inner container">
+    <a class="nav-brand" href={homePathFor(locale)} aria-label="Devlytics"><Logo /></a>
+    <nav class="nav-links" aria-label={t.nav.label}>
+      <a href="#install">{t.nav.install}</a>
+      <a href="#features">{t.nav.features}</a>
+      <a href="#privacy">{t.nav.privacy}</a>
+      <a href="#faq">{t.nav.faq}</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-language" href={homePathFor(otherLocale)} hreflang={otherLocale === "pt" ? "pt-BR" : "en"} aria-label={t.nav.switchLanguageLabel}>
+        {t.nav.switchLanguage}
+      </a>
+      <a class="nav-cta liquid-glass" href="#demo">{t.nav.cta}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    transition:
+      background 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+
+  .nav.is-scrolled {
+    background: rgba(243, 244, 246, 0.78);
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 4.25rem;
+  }
+
+  .nav-brand {
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: none;
+    gap: 1.75rem;
+    font-size: 0.93rem;
+  }
+
+  .nav-links a,
+  .nav-language {
+    color: var(--text-soft);
+    text-decoration: none;
+    transition: color 0.2s var(--ease);
+  }
+
+  .nav-links a:hover,
+  .nav-language:hover {
+    color: var(--text);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.93rem;
+  }
+
+  .nav-cta {
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @media (min-width: 900px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav {
+      transition: none;
+    }
+  }
+</style>

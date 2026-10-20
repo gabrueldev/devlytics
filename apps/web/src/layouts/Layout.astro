@@ -1,0 +1,50 @@
+---
+import "../styles/tokens.css";
+import "../styles/glass.css";
+import "../styles/base.css";
+import { dictionaryFor, homePathFor, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+const site = Astro.site?.origin ?? "https://devlytics.gabrueldev.com";
+const canonical = new URL(homePathFor(locale), site).href;
+const fonts =
+  "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..800&family=Poppins:wght@400;500;600&display=swap";
+---
+
+<!doctype html>
+<html lang={t.locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f3f4f6" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="pt-BR" href={new URL(homePathFor("pt"), site).href} />
+    <link rel="alternate" hreflang="en" href={new URL(homePathFor("en"), site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(homePathFor("pt"), site).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Devlytics" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={fonts} />
+    <script defer src="https://devlytics.gabrueldev.com/t.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skip}</a>
+    <slot />
+    <script>
+      import "../scripts/main";
+    </script>
+  </body>
+</html>

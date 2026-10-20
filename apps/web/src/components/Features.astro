@@ -1,0 +1,313 @@
+---
+import { dictionaryFor, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+const [ranking, attention, conversions, links] = t.features.cards;
+const rankingShares = [1, 0.57, 0.3];
+const sectionHeat = [0.35, 0.55, 1, 0.42];
+const conversionCounts = [24, 11, 9, 6];
+---
+
+<section class="section features" id="features">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <h2 class="section-title">{t.features.title}</h2>
+      <p class="section-sub">{t.features.sub}</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature glass-plate reveal">
+        <div class="feature-art art-ranking" aria-hidden="true">
+          {
+            t.features.ranking.map((row, index) => (
+              <div class="rank-row" style={`--share: ${rankingShares[index] ?? 0.3}; --order: ${index}`}>
+                <span class="rank-position">{index + 1}</span>
+                <span class="rank-name">{row.name}</span>
+                <span class="rank-value">{row.value}</span>
+                <span class="rank-bar" />
+              </div>
+            ))
+          }
+        </div>
+        <h3>{ranking?.title}</h3>
+        <p>{ranking?.text}</p>
+      </article>
+
+      <article class="feature glass-plate reveal">
+        <div class="feature-art art-attention" aria-hidden="true">
+          {
+            t.features.sections.map((section, index) => (
+              <div class="heat-strip" style={`--heat: ${sectionHeat[index] ?? 0.3}; --order: ${index}`}>
+                <span>{section}</span>
+              </div>
+            ))
+          }
+        </div>
+        <h3>{attention?.title}</h3>
+        <p>{attention?.text}</p>
+      </article>
+
+      <article class="feature glass-plate reveal">
+        <div class="feature-art art-conversions" aria-hidden="true">
+          {
+            t.features.conversions.map((conversion, index) => (
+              <div class="conversion" style={`--order: ${index}`}>
+                <span class="conversion-count">{conversionCounts[index]}</span>
+                <span class="conversion-name">{conversion}</span>
+              </div>
+            ))
+          }
+        </div>
+        <h3>{conversions?.title}</h3>
+        <p>{conversions?.text}</p>
+      </article>
+
+      <article class="feature glass-plate reveal">
+        <div class="feature-art art-links" aria-hidden="true">
+          <div class="toast">
+            <span class="toast-icon">
+              <svg width="16" height="16" viewBox="0 0 32 32">
+                <rect x="8" y="17" width="4" height="7" rx="2" fill="#fff" opacity=".55"></rect>
+                <rect x="14" y="12" width="4" height="12" rx="2" fill="#fff" opacity=".8"></rect>
+                <rect x="20" y="8" width="4" height="16" rx="2" fill="#7f9bff"></rect>
+              </svg>
+            </span>
+            <span class="toast-body">
+              <span class="toast-meta"><b>{t.features.notification.app}</b>{t.features.notification.time}</span>
+              <span class="toast-title">{t.features.notification.title}</span>
+              <span class="toast-text">{t.features.notification.text}</span>
+            </span>
+          </div>
+        </div>
+        <h3>{links?.title}</h3>
+        <p>{links?.text}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .feature h3 {
+    margin-top: 1.5rem;
+    font-size: 1.4rem;
+  }
+
+  .feature p {
+    margin-top: 0.5rem;
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .feature-art {
+    display: grid;
+    align-content: center;
+    gap: 0.6rem;
+    min-height: 12.5rem;
+    padding: 1.1rem;
+    border-radius: 16px;
+    background: rgba(17, 17, 22, 0.03);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .rank-row {
+    display: grid;
+    grid-template-columns: 1.4rem 1fr auto;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .rank-position {
+    color: var(--text-mute);
+    font-weight: 600;
+  }
+
+  .rank-value {
+    color: var(--text-mute);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank-bar {
+    grid-column: 2 / -1;
+    height: 7px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--brand), #7f9bff);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s var(--ease);
+    transition-delay: calc(0.3s + var(--order) * 0.15s);
+  }
+
+  .reveal.is-visible .rank-bar {
+    transform: scaleX(var(--share));
+  }
+
+  .art-attention {
+    gap: 0.35rem;
+  }
+
+  .heat-strip {
+    position: relative;
+    padding: 0.5rem 0.8rem;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
+    font-size: 0.8rem;
+    overflow: hidden;
+  }
+
+  .heat-strip::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(var(--brand-rgb), 0.85), rgba(var(--brand-rgb), 0.2));
+    opacity: 0;
+    transition: opacity 0.9s var(--ease);
+    transition-delay: calc(0.3s + var(--order) * 0.12s);
+  }
+
+  .reveal.is-visible .heat-strip::before {
+    opacity: calc(var(--heat) * 0.55);
+  }
+
+  .heat-strip span {
+    position: relative;
+  }
+
+  .art-conversions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .conversion {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease);
+    transition-delay: calc(0.3s + var(--order) * 0.1s);
+  }
+
+  .reveal.is-visible .conversion {
+    opacity: 1;
+    transform: none;
+  }
+
+  .conversion-count {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .conversion-name {
+    color: var(--text-mute);
+    font-size: 0.8rem;
+  }
+
+  .art-links {
+    place-items: center;
+    background:
+      radial-gradient(circle at 50% 120%, rgba(var(--brand-rgb), 0.14), transparent 60%), rgba(17, 17, 22, 0.03);
+  }
+
+  .toast {
+    display: flex;
+    gap: 0.75rem;
+    width: min(100%, 21rem);
+    padding: 0.85rem 0.95rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 18px 36px -18px rgba(17, 17, 22, 0.35);
+    opacity: 0;
+    transform: translateY(-14px) scale(0.97);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.7s var(--ease);
+    transition-delay: 0.45s;
+  }
+
+  .reveal.is-visible .toast {
+    opacity: 1;
+    transform: none;
+  }
+
+  .toast-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9px;
+    background: #111116;
+  }
+
+  .toast-body {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .toast-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--text-mute);
+    font-size: 0.74rem;
+  }
+
+  .toast-meta b {
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  .toast-title {
+    font-weight: 600;
+  }
+
+  .toast-text {
+    color: var(--text-soft);
+  }
+
+  @media (min-width: 760px) {
+    .feature-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rank-bar,
+    .heat-strip::before,
+    .conversion,
+    .toast {
+      transition: none;
+    }
+  }
+</style>

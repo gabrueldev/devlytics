@@ -32,6 +32,7 @@ export default tseslint.config(
       "**/.wrangler/**",
       "**/worker-configuration.d.ts",
       "**/migrations/**",
+      "**/.astro/**",
     ],
   },
   js.configs.recommended,

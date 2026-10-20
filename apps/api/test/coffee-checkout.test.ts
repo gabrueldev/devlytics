@@ -63,4 +63,29 @@ describe("coffee checkout", () => {
 
     expect(response.status).toBe(404);
   });
+
+  it("lets the product site on its workers.dev address start a checkout", async () => {
+    const response = await exports.default.fetch("https://devlytics.test/api/coffees/pix", {
+      method: "OPTIONS",
+      headers: {
+        origin: "https://devlytics-web.gabrueldev.workers.dev",
+        "access-control-request-method": "POST",
+        "access-control-request-headers": "content-type",
+      },
+    });
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get("access-control-allow-origin")).toBe(
+      "https://devlytics-web.gabrueldev.workers.dev",
+    );
+  });
+
+  it("does not let other sites start a checkout from the browser", async () => {
+    const response = await exports.default.fetch("https://devlytics.test/api/coffees/pix", {
+      method: "OPTIONS",
+      headers: { origin: "https://evil.example", "access-control-request-method": "POST" },
+    });
+
+    expect(response.headers.get("access-control-allow-origin")).toBeNull();
+  });
 });

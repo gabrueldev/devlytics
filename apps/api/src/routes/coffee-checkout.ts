@@ -4,11 +4,15 @@ import { Hono, type Context } from "hono";
 import type { z } from "zod";
 import type { AppEnv } from "../app-env";
 import { buildContainer } from "../container";
+import { checkoutCors } from "../middleware/checkout-cors";
 import { checkoutGuard } from "../middleware/checkout-guard";
 
 const orderIdPattern = /^[\w-]{1,64}$/;
 
 export const coffeeCheckoutRoutes = new Hono<AppEnv>()
+  .use("/coffees/pix", checkoutCors)
+  .use("/coffees/card", checkoutCors)
+  .use("/coffees/orders/*", checkoutCors)
   .post("/coffees/pix", checkoutGuard, async (c) => {
     const request = await bodyOf(c, pixCoffeeRequestSchema);
     if (request === null) return c.json({ error: "invalid_request" }, 400);

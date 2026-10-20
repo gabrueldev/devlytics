@@ -1,4 +1,5 @@
 ---
+import { dashboardPathFor } from "../config/dashboard";
 import { dictionaryFor, type Locale } from "../i18n";
 import HeroPreview from "./HeroPreview.astro";
 import InstallTag from "./InstallTag.astro";
@@ -25,7 +26,7 @@ const t = dictionaryFor(locale);
         <InstallTag label={t.hero.tagLabel} copy={t.hero.copy} copied={t.hero.copied} />
       </div>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#demo">
+        <a class="btn btn-primary" href={dashboardPathFor(locale)}>
           {t.hero.primary}
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>

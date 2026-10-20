@@ -25,8 +25,7 @@ const otherLocale: Locale = locale === "pt" ? "en" : "pt";
       <a class="nav-language" href={homePathFor(otherLocale)} hreflang={otherLocale === "pt" ? "pt-BR" : "en"} aria-label={t.nav.switchLanguageLabel}>
         {t.nav.switchLanguage}
       </a>
-      <a class="nav-language" href={dashboardPathFor(locale)}>{t.nav.signIn}</a>
-      <a class="nav-cta liquid-glass" href="#demo">{t.nav.cta}</a>
+      <a class="nav-cta liquid-glass" href={dashboardPathFor(locale)}>{t.nav.cta}</a>
     </div>
   </div>
 </header>

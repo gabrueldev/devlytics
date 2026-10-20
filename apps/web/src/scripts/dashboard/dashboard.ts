@@ -18,6 +18,7 @@ type Texts = Dictionary["dashboard"];
 
 const periods = [7, 30, 90];
 const lastSiteKey = "devlytics-dashboard-site";
+const pendingLinkKey = "devlytics-dashboard-link";
 const disarmAfterMs = 3000;
 
 const root = document.querySelector<HTMLElement>("[data-dashboard]");
@@ -38,17 +39,14 @@ async function startDashboard(root: HTMLElement): Promise<void> {
   const removeButton = find<HTMLButtonElement>("[data-remove-site]");
 
   const params = new URLSearchParams(location.search);
+  const returning = params.has("link") ? null : takePendingLink();
   let account: Account | null = null;
-  let siteId: string | null = params.get("site") ?? storedSite();
+  let siteId: string | null = params.get("site") ?? returning?.siteId ?? storedSite();
   let days = periods.includes(Number(params.get("days"))) ? Number(params.get("days")) : 7;
   let loadingReport = 0;
   let drawChart: (() => void) | null = null;
-  let tab: "overview" | "links" = params.get("link")
-    ? "links"
-    : params.get("tab") === "links"
-      ? "links"
-      : "overview";
-  let pendingLinkId = params.get("link");
+  let pendingLinkId = params.get("link") ?? returning?.linkId ?? null;
+  let tab: "overview" | "links" = pendingLinkId || params.get("tab") === "links" ? "links" : "overview";
   const linksPanel = new LinksPanel(
     {
       form: find<HTMLFormElement>("[data-link-form]"),
@@ -307,7 +305,26 @@ async function startDashboard(root: HTMLElement): Promise<void> {
   try {
     enterAccount(await api.account());
   } catch {
+    if (siteId && pendingLinkId) keepPendingLink({ siteId, linkId: pendingLinkId });
     show("signed-out");
+  }
+}
+
+function keepPendingLink(pending: { siteId: string; linkId: string }): void {
+  try {
+    sessionStorage.setItem(pendingLinkKey, JSON.stringify(pending));
+  } catch {
+    return;
+  }
+}
+
+function takePendingLink(): { siteId: string; linkId: string } | null {
+  try {
+    const stored = sessionStorage.getItem(pendingLinkKey);
+    sessionStorage.removeItem(pendingLinkKey);
+    return stored ? (JSON.parse(stored) as { siteId: string; linkId: string }) : null;
+  } catch {
+    return null;
   }
 }
 

@@ -5,6 +5,7 @@ import {
   CaktoPaymentGateway,
   D1CoffeeLedger,
   D1SiteRepository,
+  EdgeTokenCache,
 } from "@devlytics/adapters";
 import {
   chargeCardCoffee,
@@ -21,7 +22,12 @@ export function buildContainer(env: Env) {
   const sql = new AnalyticsEngineSqlClient(env.CF_ACCOUNT_ID, env.CF_ANALYTICS_TOKEN);
   const ledger = new D1CoffeeLedger(db);
   const gateway = new CaktoPaymentGateway(
-    new CaktoAccessTokens({ clientId: env.CAKTO_CLIENT_ID, clientSecret: env.CAKTO_CLIENT_SECRET }),
+    new CaktoAccessTokens(
+      { clientId: env.CAKTO_CLIENT_ID, clientSecret: env.CAKTO_CLIENT_SECRET },
+      undefined,
+      undefined,
+      new EdgeTokenCache(caches.default),
+    ),
     env.COFFEE_OFFER_ID,
   );
 

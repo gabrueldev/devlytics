@@ -1,6 +1,6 @@
 import { PaymentRejectedError } from "@devlytics/core";
 import { describe, expect, it } from "vitest";
-import { CaktoAccessTokens, CaktoPaymentGateway } from "../../src";
+import { CaktoAccessTokens, CaktoPaymentGateway, type CachedToken, type TokenCache } from "../../src";
 
 interface SentRequest {
   url: string;
@@ -112,5 +112,22 @@ describe("CaktoPaymentGateway", () => {
     const { send } = fakeCakto([new Response(null, { status: 400 })]);
 
     await expect(gatewayWith(send).chargePix(pixRequest)).rejects.toEqual(new PaymentRejectedError(400));
+  });
+
+  it("takes the token another instance already issued instead of asking Cakto again", async () => {
+    const clientId = crypto.randomUUID();
+    const shared = new Map<string, CachedToken>();
+    const cache: TokenCache = {
+      read: async (key) => shared.get(key) ?? null,
+      write: async (key, token) => void shared.set(key, token),
+      remove: async (key) => void shared.delete(key),
+    };
+    shared.set(clientId, { value: "token_from_peer", expiresAt: Date.now() + 3_600_000 });
+    const { sent, send } = fakeCakto([Response.json(pixOrder, { status: 201 })]);
+
+    const tokens = new CaktoAccessTokens({ clientId, clientSecret: "secret" }, send, Date.now, cache);
+    await new CaktoPaymentGateway(tokens, "offer_1", send).chargePix(pixRequest);
+
+    expect(sent.map((request) => request.headers.get("authorization"))).toEqual(["Bearer token_from_peer"]);
   });
 });

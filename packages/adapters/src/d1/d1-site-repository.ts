@@ -1,13 +1,29 @@
-import type { Site, SiteRepository } from "@devlytics/core";
+import type { Site, SiteCatalog } from "@devlytics/core";
 import { schema, type Database } from "@devlytics/db";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
-export class D1SiteRepository implements SiteRepository {
+const { sites } = schema;
+
+export class D1SiteRepository implements SiteCatalog {
   constructor(private readonly db: Database) {}
 
   async findByDomain(domain: string): Promise<Site | null> {
-    const site = await this.db.select().from(schema.sites).where(eq(schema.sites.domain, domain)).get();
+    return (await this.db.select().from(sites).where(eq(sites.domain, domain)).get()) ?? null;
+  }
 
-    return site ?? null;
+  async findById(id: string): Promise<Site | null> {
+    return (await this.db.select().from(sites).where(eq(sites.id, id)).get()) ?? null;
+  }
+
+  async listByUser(userId: string): Promise<Site[]> {
+    return this.db.select().from(sites).where(eq(sites.userId, userId)).orderBy(asc(sites.createdAt));
+  }
+
+  async add(site: Site): Promise<void> {
+    await this.db.insert(sites).values(site);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.db.delete(sites).where(eq(sites.id, id));
   }
 }

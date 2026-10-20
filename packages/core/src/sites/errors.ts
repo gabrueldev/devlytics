@@ -13,3 +13,27 @@ export class UnknownSiteError extends Error {
     super(`No site is registered for "${domain}"`);
   }
 }
+
+export class InvalidDomainError extends Error {
+  override readonly name = "InvalidDomainError";
+
+  constructor(readonly input: string) {
+    super(`"${input}" is not a domain`);
+  }
+}
+
+export class DomainTakenError extends Error {
+  override readonly name = "DomainTakenError";
+
+  constructor(readonly domain: string) {
+    super(`"${domain}" is already registered`);
+  }
+}
+
+export class SiteNotFoundError extends Error {
+  override readonly name = "SiteNotFoundError";
+
+  constructor(readonly siteId: string) {
+    super(`Site "${siteId}" does not exist for this user`);
+  }
+}

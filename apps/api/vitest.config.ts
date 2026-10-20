@@ -15,6 +15,8 @@ export default defineConfig(async () => {
             CAKTO_WEBHOOK_SECRET: "test-secret",
             CAKTO_CLIENT_ID: "test-client",
             CAKTO_CLIENT_SECRET: "test-client-secret",
+            GITHUB_CLIENT_SECRET: "test-github-secret",
+            SESSION_SECRET: "test-session-secret",
           },
         },
       }),

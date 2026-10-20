@@ -15,6 +15,13 @@
       "when": 1792503801456,
       "tag": "0001_coffees",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792514698559,
+      "tag": "0002_users_profile",
+      "breakpoints": true
     }
   ]
 }

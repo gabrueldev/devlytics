@@ -1,0 +1,644 @@
+---
+import { dictionaryFor, homePathFor, type Locale } from "../i18n";
+import { dashboardPathFor } from "../config/dashboard";
+import InstallTag from "./InstallTag.astro";
+import Logo from "./Logo.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dictionary = dictionaryFor(locale);
+const t = dictionary.dashboard;
+const signInUrl = `/api/auth/github?next=${encodeURIComponent(dashboardPathFor(locale))}`;
+const githubIcon =
+  "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z";
+---
+
+<div class="dash" data-dashboard data-view="loading" data-locale={dictionary.locale} data-texts={JSON.stringify(t)}>
+  <header class="dash-top">
+    <div class="container dash-top-inner">
+      <a href={homePathFor(locale)} aria-label="Devlytics"><Logo /></a>
+      <div class="dash-account" data-account hidden>
+        <label class="dash-site-picker">
+          <span class="sr-only">{t.sites}</span>
+          <select data-site-select></select>
+        </label>
+        <button class="dash-ghost" type="button" data-open-new-site>+ {t.addSite}</button>
+        <img class="dash-avatar" data-avatar alt="" width="32" height="32" hidden />
+        <button class="dash-ghost" type="button" data-sign-out>{t.signOut}</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container dash-main">
+    <p class="dash-status" data-view-panel="loading">{t.loading}</p>
+
+    <section class="dash-center glass-plate" data-view-panel="signed-out" hidden>
+      <h1>{t.signIn.title}</h1>
+      <p class="dash-sub">{t.signIn.sub}</p>
+      <p class="dash-error" data-login-failed hidden>{t.signIn.failed}</p>
+      <a class="btn btn-primary" href={signInUrl}>
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d={githubIcon}></path></svg>
+        {t.signIn.button}
+      </a>
+    </section>
+
+    <section class="dash-center glass-plate" data-view-panel="onboarding" hidden>
+      <h1>{t.newSite.firstTitle}</h1>
+      <p class="dash-sub">{t.newSite.sub}</p>
+      <div data-new-site-slot="onboarding"></div>
+    </section>
+
+    <section class="dash-report" data-view-panel="report" hidden>
+      <div class="dash-head">
+        <div>
+          <h1 data-site-name></h1>
+          <a class="dash-domain" data-site-domain target="_blank" rel="noopener"></a>
+        </div>
+        <div class="dash-periods" role="group" aria-label={t.periodLabel}>
+          {
+            ([7, 30, 90] as const).map((days) => (
+              <button type="button" data-period={days} aria-pressed="false">
+                {t.periods[days]}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <section class="dash-card dash-install glass-plate" data-install hidden>
+        <h2>{t.install.title}</h2>
+        <p class="dash-sub">{t.install.sub}</p>
+        <InstallTag label={t.install.title} copy={t.install.copy} copied={t.install.copied} />
+      </section>
+
+      <p class="dash-error" data-report-error hidden>
+        {t.error} <button class="dash-link" type="button" data-retry>{t.retry}</button>
+      </p>
+
+      <div class="dash-body" data-report-body>
+        <div class="dash-kpis">
+          <div class="dash-kpi glass-plate"><span>{t.metrics.visits}</span><strong data-kpi="visits">–</strong></div>
+          <div class="dash-kpi glass-plate"><span>{t.metrics.attention}</span><strong data-kpi="attention">–</strong></div>
+          <div class="dash-kpi glass-plate"><span>{t.metrics.topProject}</span><strong data-kpi="topProject">–</strong></div>
+          <div class="dash-kpi glass-plate"><span>{t.metrics.repoClicks}</span><strong data-kpi="repoClicks">–</strong></div>
+        </div>
+
+        <section class="dash-card glass-plate">
+          <h2>{t.daily}</h2>
+          <div class="dash-chart" data-daily-chart></div>
+        </section>
+
+        <div class="dash-grid dash-grid--two">
+          <section class="dash-card glass-plate">
+            <h2>{t.projects.title}</h2>
+            <div data-projects></div>
+          </section>
+          <section class="dash-card glass-plate">
+            <h2>{t.sections.title}</h2>
+            <ol class="dash-bars" data-ranked="sections"></ol>
+          </section>
+        </div>
+
+        <div class="dash-grid dash-grid--three">
+          <section class="dash-card glass-plate">
+            <h2>{t.conversions.title}</h2>
+            <ol class="dash-bars" data-ranked="conversions"></ol>
+          </section>
+          <section class="dash-card glass-plate">
+            <h2>{t.sources.title}</h2>
+            <ol class="dash-bars" data-ranked="sources"></ol>
+          </section>
+          <section class="dash-card glass-plate">
+            <h2>{t.countries.title}</h2>
+            <ol class="dash-bars" data-ranked="countries"></ol>
+          </section>
+        </div>
+      </div>
+
+      <button class="dash-remove" type="button" data-remove-site>{t.remove}</button>
+    </section>
+  </main>
+
+  <dialog class="dash-dialog glass-plate" data-new-site-dialog>
+    <h2>{t.newSite.title}</h2>
+    <p class="dash-sub">{t.newSite.sub}</p>
+    <div data-new-site-slot="dialog"></div>
+  </dialog>
+
+  <template data-new-site-template>
+    <form class="dash-form" novalidate>
+      <label class="dash-field">
+        <span>{t.newSite.domain}</span>
+        <input name="domain" required autocomplete="url" inputmode="url" placeholder={t.newSite.domainPlaceholder} />
+      </label>
+      <label class="dash-field">
+        <span>{t.newSite.name}</span>
+        <input name="name" maxlength="80" placeholder={t.newSite.namePlaceholder} />
+      </label>
+      <p class="dash-error" data-form-error hidden></p>
+      <div class="dash-form-actions">
+        <button class="btn btn-primary" type="submit">{t.newSite.submit}</button>
+        <button class="dash-ghost" type="button" value="cancel" data-cancel>{t.newSite.cancel}</button>
+      </div>
+    </form>
+  </template>
+</div>
+
+<script>
+  import "../scripts/dashboard/dashboard";
+</script>
+
+<style>
+  .dash {
+    min-height: 100vh;
+  }
+
+  .dash-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(243, 244, 246, 0.82);
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .dash-top-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4rem;
+  }
+
+  .dash-top a {
+    text-decoration: none;
+  }
+
+  .dash-account {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .dash-site-picker select {
+    max-width: 14rem;
+    padding: 0.5rem 2rem 0.5rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234d4e57' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+      no-repeat right 0.8rem center;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    appearance: none;
+    text-overflow: ellipsis;
+  }
+
+  .dash-ghost {
+    padding: 0.45rem 0.8rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-size: 0.88rem;
+    color: var(--text-soft);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .dash-ghost:hover {
+    background: var(--bg-raised);
+    color: var(--text);
+  }
+
+  .dash-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+
+  .dash-main {
+    padding-block: 2rem 4rem;
+  }
+
+  .dash-status {
+    padding-top: 20vh;
+    text-align: center;
+    color: var(--text-mute);
+  }
+
+  .dash-center {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    max-width: 30rem;
+    margin: 12vh auto 0;
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    text-align: center;
+  }
+
+  .dash-center h1 {
+    font-size: clamp(1.7rem, 5vw, 2.2rem);
+  }
+
+  .dash-center :global(.dash-form) {
+    width: 100%;
+    text-align: left;
+  }
+
+  .dash-sub {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .dash-error {
+    padding: 0.65rem 0.9rem;
+    border-radius: var(--radius);
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 0.9rem;
+  }
+
+  .dash-link {
+    border: 0;
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .dash-report {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .dash-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dash-head h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+  }
+
+  .dash-domain {
+    color: var(--text-soft);
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+
+  .dash-domain:hover {
+    text-decoration: underline;
+  }
+
+  .dash-periods {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: var(--bg-raised);
+  }
+
+  .dash-periods button {
+    padding: 0.45rem 0.9rem;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    cursor: pointer;
+  }
+
+  .dash-periods button[aria-pressed="true"] {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .dash-body {
+    display: grid;
+    gap: 1.25rem;
+    transition: opacity 0.2s var(--ease);
+  }
+
+  .dash-body.is-loading {
+    opacity: 0.5;
+  }
+
+  .dash-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .dash-kpi {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.1rem 1.2rem;
+  }
+
+  .dash-kpi span {
+    color: var(--text-soft);
+    font-size: 0.85rem;
+  }
+
+  .dash-kpi strong {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dash-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 1rem;
+    padding: 1.25rem 1.3rem;
+    min-width: 0;
+  }
+
+  .dash-card h2 {
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+
+  .dash-install :global(.install-tag) {
+    max-width: 100%;
+  }
+
+  .dash-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .dash-grid--two {
+    grid-template-columns: 1.4fr 1fr;
+  }
+
+  .dash-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dash-chart {
+    position: relative;
+  }
+
+  .dash-chart :global(svg) {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .dash-chart :global(.bar) {
+    fill: var(--brand);
+  }
+
+  .dash-chart :global(.hit:hover + .bar),
+  .dash-chart :global(.bar.is-active) {
+    fill: var(--brand-deep);
+  }
+
+  .dash-chart :global(.grid-line) {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  .dash-chart :global(.axis-label) {
+    fill: var(--text-mute);
+    font-size: 11px;
+    font-family: var(--font-sans);
+  }
+
+  .dash-chart :global(.chart-tip) {
+    position: absolute;
+    top: 0;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    background: var(--text);
+    color: #fff;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translate(-50%, -110%);
+  }
+
+  .dash-bars {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dash-bars :global(li) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .dash-bars :global(.bar-name) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dash-bars :global(.bar-value) {
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dash-bars :global(.bar-track) {
+    grid-column: 1 / -1;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--bg-raised);
+  }
+
+  .dash-bars :global(.bar-fill) {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--brand);
+  }
+
+  .dash-bars :global(.bar-empty),
+  .dash-card :global(.table-empty) {
+    color: var(--text-mute);
+    font-size: 0.9rem;
+  }
+
+  .dash-card :global(.table-wrap) {
+    overflow-x: auto;
+  }
+
+  .dash-card :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .dash-card :global(th) {
+    padding: 0 0.5rem 0.5rem;
+    color: var(--text-mute);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .dash-card :global(td) {
+    padding: 0.55rem 0.5rem;
+    border-top: 1px solid var(--line);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .dash-card :global(th:first-child),
+  .dash-card :global(td:first-child) {
+    padding-left: 0;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .dash-card :global(td:last-child),
+  .dash-card :global(th:last-child) {
+    padding-right: 0;
+  }
+
+  .dash-remove {
+    justify-self: start;
+    margin-top: 1.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--text-mute);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .dash-remove:hover,
+  .dash-remove.is-armed {
+    color: #b91c1c;
+  }
+
+  .dash-dialog {
+    width: min(28rem, calc(100% - 2rem));
+    padding: 1.75rem;
+    border: 0;
+    color: var(--text);
+  }
+
+  .dash-dialog::backdrop {
+    background: rgba(17, 17, 22, 0.35);
+    backdrop-filter: blur(3px);
+  }
+
+  .dash-dialog h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dash-dialog :global(.dash-form) {
+    margin-top: 1.25rem;
+  }
+
+  :global(.dash-form) {
+    display: grid;
+    gap: 1rem;
+  }
+
+  :global(.dash-field) {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  :global(.dash-field input) {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  :global(.dash-field input:focus) {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.15);
+  }
+
+  :global(.dash-form-actions) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .dash-kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dash-grid--two,
+    .dash-grid--three {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .dash-top-inner {
+      flex-wrap: wrap;
+      padding-block: 0.6rem;
+    }
+
+    .dash-account {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .dash-site-picker select {
+      max-width: 9.5rem;
+    }
+
+    .dash-avatar {
+      display: none;
+    }
+
+    .dash-kpi {
+      padding: 0.95rem 1rem;
+    }
+
+    .dash-kpi strong {
+      font-size: 1.35rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dash-body {
+      transition: none;
+    }
+  }
+</style>

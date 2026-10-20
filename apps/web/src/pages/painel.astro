@@ -1,0 +1,10 @@
+---
+import Dashboard from "../components/Dashboard.astro";
+import { dashboardPathFor } from "../config/dashboard";
+import { pt } from "../i18n/pt";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout locale="pt" title={pt.dashboard.pageTitle} path={dashboardPathFor("pt")} noindex>
+  <Dashboard locale="pt" />
+</Layout>

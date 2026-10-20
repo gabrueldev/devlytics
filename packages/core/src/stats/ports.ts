@@ -1,3 +1,4 @@
+import type { SiteReportData } from "./site-report";
 import type { SiteTotals } from "./site-totals";
 
 export interface StatsPeriod {
@@ -7,4 +8,8 @@ export interface StatsPeriod {
 
 export interface SiteStatsReader {
   totals(siteId: string, period: StatsPeriod): Promise<SiteTotals>;
+}
+
+export interface SiteReportReader {
+  report(siteId: string, period: StatsPeriod): Promise<SiteReportData>;
 }

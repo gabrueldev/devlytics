@@ -10,6 +10,8 @@
     "CF_ACCOUNT_ID": "9f368c41dee97aef4e913f2a9d26d49a",
     "DEMO_DOMAIN": "gabrueldev.com",
     "EVENTS_DATASET": "devlytics_events",
+    "APP_ORIGIN": "https://devlytics.gabrueldev.com",
+    "GITHUB_CLIENT_ID": "Ov23liHumJTQYxyf7tWJ",
     "COFFEE_OFFER_ID": "34qhf5x",
     "CAKTO_CLIENT_ID": "2TZSudS7KUYiedeMcoDaPRxT7YwhnT56RJ2TORhc",
   },

@@ -6,6 +6,11 @@
   "compatibility_flags": ["nodejs_compat"],
   "routes": [{ "pattern": "devlytics.gabrueldev.com/api/*", "zone_name": "gabrueldev.com" }],
   "observability": { "enabled": true },
+  "vars": {
+    "CF_ACCOUNT_ID": "9f368c41dee97aef4e913f2a9d26d49a",
+    "DEMO_DOMAIN": "gabrueldev.com",
+    "EVENTS_DATASET": "devlytics_events",
+  },
   "d1_databases": [
     {
       "binding": "DB",

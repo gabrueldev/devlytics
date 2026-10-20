@@ -1,0 +1,54 @@
+:root {
+  --lg-fill: radial-gradient(
+    ellipse 65% 95% at 50% 50%,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 255, 255, 0.18) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  --lg-fill-hover: radial-gradient(
+    ellipse 70% 100% at 50% 50%,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.28) 60%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  --lg-shadow:
+    -1px 0 0 rgba(17, 17, 22, 0.32), 1px 0 0 rgba(17, 17, 22, 0.32), 0 0 0 0.5px rgba(17, 17, 22, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  --lg-shadow-hover:
+    -1px 0 0 rgba(17, 17, 22, 0.42), 1px 0 0 rgba(17, 17, 22, 0.42), 0 0 0 0.5px rgba(17, 17, 22, 0.2),
+    inset 0 1px 0 #fff;
+  --plate-fill: linear-gradient(
+    140deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.76) 55%,
+    rgba(255, 255, 255, 0.86) 100%
+  );
+  --plate-shadow:
+    inset 0 1px 0 #fff, inset 0 -14px 28px -22px rgba(17, 17, 22, 0.1), 0 0 0 1px rgba(17, 17, 22, 0.05),
+    0 22px 44px -28px rgba(17, 17, 22, 0.28);
+}
+
+.liquid-glass {
+  background: var(--lg-fill);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px) saturate(1.3);
+  -webkit-backdrop-filter: blur(4px) saturate(1.3);
+  box-shadow: var(--lg-shadow);
+  transition:
+    background 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+.liquid-glass:hover {
+  background: var(--lg-fill-hover);
+  box-shadow: var(--lg-shadow-hover);
+}
+
+.glass-plate {
+  background: var(--plate-fill);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--plate-shadow);
+  backdrop-filter: blur(9px) saturate(1.1);
+  -webkit-backdrop-filter: blur(9px) saturate(1.1);
+}

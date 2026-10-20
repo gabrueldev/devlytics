@@ -1,0 +1,94 @@
+---
+import { dictionaryFor, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+---
+
+<section class="section faq" id="faq">
+  <div class="container faq-layout">
+    <h2 class="section-title reveal">{t.faq.title}</h2>
+    <div class="faq-list reveal">
+      {
+        t.faq.items.map((item) => (
+          <details class="faq-item">
+            <summary>
+              {item.question}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </summary>
+            <p>{item.answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    padding-top: 0;
+  }
+
+  .faq-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .faq-list {
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary svg {
+    flex: none;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .faq-item[open] summary svg {
+    transform: rotate(45deg);
+  }
+
+  .faq-item p {
+    padding-bottom: 1.4rem;
+    max-width: 40rem;
+    color: var(--text-soft);
+  }
+
+  @media (min-width: 900px) {
+    .faq-layout {
+      grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    summary svg {
+      transition: none;
+    }
+  }
+</style>

@@ -11,6 +11,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@devlytics/adapters": "workspace:*",
+    "@devlytics/core": "workspace:*",
+    "@devlytics/db": "workspace:*",
     "hono": "4.13.13"
   },
   "devDependencies": {

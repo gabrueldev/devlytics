@@ -18,3 +18,9 @@ export const sites = sqliteTable("sites", {
   domain: text("domain").notNull().unique(),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
 });
+
+export const coffees = sqliteTable("coffees", {
+  orderId: text("order_id").primaryKey(),
+  paidAt: integer("paid_at", { mode: "timestamp_ms" }),
+  reversedAt: integer("reversed_at", { mode: "timestamp_ms" }),
+});

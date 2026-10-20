@@ -1,0 +1,67 @@
+---
+import CoffeeCup from "../components/CoffeeCup.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout locale="pt" title="Valeu pelo café | Devlytics" path="/obrigado" noindex>
+  <main id="main" class="thanks container">
+    <span class="thanks-cup liquid-glass liquid-glass--round"><CoffeeCup size={34} /></span>
+    <h1>Valeu pelo café!</h1>
+    <p class="thanks-sub">
+      Ele ajuda a manter o Devlytics grátis para todo mundo. Assim que o pagamento for aprovado, ele entra no contador
+      do site.
+    </p>
+    <p class="thanks-sub thanks-en" lang="en">Thanks for the coffee! It helps keep Devlytics free for everyone.</p>
+    <div class="thanks-links">
+      <a class="btn btn-primary" href="/">Voltar ao Devlytics</a>
+      <a class="thanks-en-link" href="/en/" lang="en">Back to Devlytics in English</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .thanks {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1.1rem;
+    min-height: 100vh;
+    max-width: 36rem;
+    text-align: center;
+  }
+
+  .thanks-cup {
+    display: grid;
+    place-items: center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    color: var(--brand);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 7vw, 3.6rem);
+  }
+
+  .thanks-sub {
+    color: var(--text-soft);
+  }
+
+  .thanks-en {
+    font-size: 0.9rem;
+    color: var(--text-mute);
+  }
+
+  .thanks-links {
+    display: grid;
+    justify-items: center;
+    gap: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  .thanks-en-link {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+</style>

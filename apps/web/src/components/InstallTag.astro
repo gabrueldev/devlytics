@@ -1,0 +1,101 @@
+---
+interface Props {
+  label: string;
+  copy: string;
+  copied: string;
+}
+
+const { label, copy, copied } = Astro.props;
+const tag = '<script defer src="https://devlytics.gabrueldev.com/t.js"></script>';
+const tokens = [
+  { kind: "punct", text: "<" },
+  { kind: "tag", text: "script" },
+  { kind: "attr", text: " defer src" },
+  { kind: "punct", text: "=" },
+  { kind: "value", text: '"https://devlytics.gabrueldev.com/t.js"' },
+  { kind: "punct", text: "></" },
+  { kind: "tag", text: "script" },
+  { kind: "punct", text: ">" },
+];
+---
+
+<div class="install-tag liquid-glass" data-copy-tag data-copied-label={copied}>
+  <code aria-label={label}>
+    {
+      tokens.map((token) => (
+        <span class={`t-${token.kind}`}>{token.text}</span>
+      ))
+    }
+  </code>
+  <button type="button" class="install-copy" data-copy-value={tag}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"></rect>
+      <path d="M15 9V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H9" stroke="currentColor" stroke-width="1.8"></path>
+    </svg>
+    <span data-copy-label>{copy}</span>
+  </button>
+</div>
+
+<style>
+  .install-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 100%;
+    padding: 0.45rem 0.45rem 0.45rem 1.1rem;
+    border-radius: 999px;
+  }
+
+  code {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    white-space: pre;
+    font-size: clamp(0.72rem, 1.6vw, 0.86rem);
+    scrollbar-width: none;
+  }
+
+  code::-webkit-scrollbar {
+    display: none;
+  }
+
+  .t-punct {
+    color: var(--text-mute);
+  }
+
+  .t-tag {
+    color: var(--brand-deep);
+  }
+
+  .t-attr {
+    color: #9a3df0;
+  }
+
+  .t-value {
+    color: #0f7b4f;
+  }
+
+  .install-copy {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.95rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--text);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s var(--ease);
+  }
+
+  .install-copy:hover {
+    background: #000;
+  }
+
+  .install-tag.is-copied .install-copy {
+    background: var(--live);
+  }
+</style>

@@ -1,0 +1,134 @@
+---
+import { dictionaryFor, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+const metrics = [
+  { key: "visits", label: t.demo.metrics.visits },
+  { key: "attention", label: t.demo.metrics.attention },
+  { key: "topProject", label: t.demo.metrics.topProject },
+  { key: "repoClicks", label: t.demo.metrics.repoClicks },
+];
+---
+
+<section class="section demo" id="demo">
+  <div class="container">
+    <div class="demo-panel glass-plate reveal" data-live-demo data-locale={t.locale} data-unavailable={t.demo.unavailable}>
+      <div class="demo-head">
+        <div>
+          <p class="demo-site"><span class="demo-dot" aria-hidden="true"></span>gabrueldev.com</p>
+          <h2 class="section-title">{t.demo.title}</h2>
+          <p class="section-sub">{t.demo.sub}</p>
+        </div>
+        <a class="demo-visit" href="https://gabrueldev.com" rel="noopener">
+          {t.demo.visit}
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+      <dl class="demo-metrics" aria-live="polite">
+        {
+          metrics.map((metric) => (
+            <div class="metric">
+              <dt>{metric.label}</dt>
+              <dd data-metric={metric.key}>{t.demo.loading}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="demo-status" data-demo-status hidden></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .demo-panel {
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .demo-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .demo-head > div {
+    max-width: 38rem;
+  }
+
+  .demo-site {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .demo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+  }
+
+  .demo-visit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--brand-deep);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .demo-visit:hover {
+    text-decoration: underline;
+  }
+
+  .demo-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1rem;
+    margin: clamp(2rem, 4vw, 2.75rem) 0 0;
+  }
+
+  .metric {
+    padding: 1.2rem 1.25rem;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+
+  .metric dt {
+    color: var(--text-mute);
+    font-size: 0.85rem;
+  }
+
+  .metric dd {
+    margin: 0.4rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .metric dd.is-text {
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+  }
+
+  .demo-status {
+    margin-top: 1.25rem;
+    color: var(--text-mute);
+    font-size: 0.9rem;
+  }
+</style>

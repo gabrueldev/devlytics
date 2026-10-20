@@ -1,0 +1,193 @@
+---
+import { dictionaryFor, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+const sessionId = "a3f91c07e4b25d68f0c3e9a17b4d2c58";
+const inputRows = [36, 92, 148, 204];
+---
+
+<section class="section privacy" id="privacy">
+  <div class="container privacy-layout">
+    <div class="privacy-copy reveal">
+      <h2 class="section-title privacy-title">
+        {t.privacy.title.split(/(?<=\.)\s+/).map((sentence) => <span>{sentence}</span>)}
+      </h2>
+      <p class="section-sub">{t.privacy.sub}</p>
+      <ul class="privacy-points">
+        {
+          t.privacy.points.map((point) => (
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              {point}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <figure class="hash-flow glass-plate reveal" data-hash-flow>
+      <div class="hash-stage">
+        <ul class="hash-inputs">
+          {t.privacy.inputs.map((input, index) => <li style={`--order: ${index}`}>{input}</li>)}
+        </ul>
+        <svg class="hash-wires" viewBox="0 0 120 240" preserveAspectRatio="none" aria-hidden="true">
+          {
+            inputRows.map((y, index) => (
+              <path
+                d={`M0 ${y} C 60 ${y}, 60 120, 120 120`}
+                pathLength="100"
+                style={`--order: ${index}`}
+              />
+            ))
+          }
+        </svg>
+        <div class="hash-output">
+          <p class="hash-label">{t.privacy.output}</p>
+          <p class="hash-value" data-scramble={sessionId} aria-label={sessionId}>{sessionId}</p>
+        </div>
+      </div>
+      <figcaption>{t.privacy.caption}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .privacy-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .privacy-title span {
+    display: block;
+  }
+
+  .privacy-points {
+    display: grid;
+    gap: 0.8rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .privacy-points li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    font-weight: 500;
+  }
+
+  .privacy-points svg {
+    flex: none;
+    margin-top: 0.15rem;
+    color: var(--live);
+  }
+
+  .hash-flow {
+    margin: 0;
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .hash-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(2.5rem, 5rem) minmax(0, 1.1fr);
+    align-items: center;
+  }
+
+  .hash-inputs {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hash-inputs li {
+    padding: 0.55rem 0.8rem;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
+    font-size: clamp(0.72rem, 1.6vw, 0.85rem);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hash-inputs li:first-child {
+    color: var(--text-mute);
+    text-decoration: line-through;
+    text-decoration-color: rgba(17, 17, 22, 0.35);
+  }
+
+  .hash-wires {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .hash-wires path {
+    fill: none;
+    stroke: rgba(var(--brand-rgb), 0.55);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 0.9s var(--ease);
+    transition-delay: calc(0.2s + var(--order) * 0.12s);
+  }
+
+  .reveal.is-visible .hash-wires path {
+    stroke-dashoffset: 0;
+  }
+
+  .hash-output {
+    padding: 1rem;
+    border-radius: 16px;
+    background: #111116;
+    color: #fff;
+    box-shadow: 0 20px 40px -22px rgba(17, 17, 22, 0.6);
+  }
+
+  .hash-label {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.78rem;
+  }
+
+  .hash-value {
+    margin-top: 0.35rem;
+    font-family: var(--font-code);
+    font-size: clamp(0.72rem, 1.6vw, 0.88rem);
+    line-height: 1.5;
+    word-break: break-all;
+    color: #b9c8ff;
+  }
+
+  figcaption {
+    margin-top: 1.5rem;
+    color: var(--text-soft);
+    font-size: 0.92rem;
+  }
+
+  @media (min-width: 960px) {
+    .privacy-layout {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hash-wires path {
+      transition: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

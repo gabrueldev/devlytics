@@ -167,7 +167,7 @@ export class LinksPanel {
     const t = this.texts.links;
     const names = this.texts.conversions.names as Record<string, string>;
     const card = node("article", "visit");
-    const stayedMs = Math.max(visit.attentionMs, Date.parse(visit.lastSeenAt) - Date.parse(visit.openedAt));
+    const stayedMs = Date.parse(visit.lastSeenAt) - Date.parse(visit.openedAt) || visit.attentionMs;
     const where = [
       this.format.country(visit.country ?? "") ?? this.texts.countries.unknown,
       [visit.device, visit.browser].filter(Boolean).join(" · "),

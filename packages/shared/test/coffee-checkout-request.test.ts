@@ -22,8 +22,8 @@ describe("coffeePayerSchema", () => {
     expect(coffeePayerSchema.parse({ ...payer, phone: "+1 415 555 0100" }).phone).toBe("14155550100");
   });
 
-  it("lets a payer outside Brazil leave the CPF empty", () => {
-    expect(coffeePayerSchema.parse({ ...payer, cpf: "" }).cpf).toBeUndefined();
+  it("requires the CPF because Cakto refuses Brazilian charges without it", () => {
+    expect(coffeePayerSchema.safeParse({ ...payer, cpf: "" }).success).toBe(false);
   });
 
   it("rejects a CPF with wrong check digits", () => {

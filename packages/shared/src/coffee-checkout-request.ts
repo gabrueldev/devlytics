@@ -12,12 +12,7 @@ const phone = z
   })
   .pipe(z.string().regex(/^\d{10,15}$/));
 
-const cpf = z
-  .string()
-  .transform(onlyDigits)
-  .refine(isValidCpf)
-  .optional()
-  .or(z.literal("").transform(() => undefined));
+const cpf = z.string().transform(onlyDigits).refine(isValidCpf);
 
 export const coffeePayerSchema = z.object({
   name: z.string().trim().min(3).max(120),

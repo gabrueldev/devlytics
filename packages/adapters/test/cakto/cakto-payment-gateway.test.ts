@@ -1,4 +1,3 @@
-import { PaymentRejectedError } from "@devlytics/core";
 import { describe, expect, it } from "vitest";
 import { CaktoAccessTokens, CaktoPaymentGateway, type CachedToken, type TokenCache } from "../../src";
 
@@ -92,7 +91,6 @@ describe("CaktoPaymentGateway", () => {
 
     const charge = await gatewayWith(send).chargeCard({
       ...pixRequest,
-      payer: { ...payer, cpf: undefined },
       cardToken: "card_token",
       antifraudReference: "antifraud_reference",
       threeDSecure: { eci: "05", referenceId: "cakto-3ds-1" },
@@ -105,7 +103,6 @@ describe("CaktoPaymentGateway", () => {
       card: { token: "card_token" },
       antifraud_profiling_attempt_reference: "antifraud_reference",
     });
-    expect(body.customer).not.toHaveProperty("docNumber");
   });
 
   it("reports a refused charge with the provider status", async () => {

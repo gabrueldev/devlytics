@@ -3,6 +3,6 @@
   "compilerOptions": {
     "verbatimModuleSyntax": true
   },
-  "include": [".astro/types.d.ts", "src", "astro.config.ts"],
+  "include": [".astro/types.d.ts", "src", "e2e", "astro.config.ts", "playwright.config.ts"],
   "exclude": ["dist"]
 }

@@ -13,7 +13,7 @@ const readings = [
 ---
 
 <div class="preview" aria-hidden="true">
-  <div class="preview-window glass-plate">
+  <div class="preview-window glass-plate" data-glow>
     <div class="preview-bar">
       <span></span><span></span><span></span>
       <p class="preview-url">fulano.dev</p>
@@ -40,7 +40,7 @@ const readings = [
     </div>
   </div>
 
-  <div class="preview-panel glass-plate">
+  <div class="preview-panel glass-plate" data-glow style="--sheen-delay: 0.6s">
     <p class="panel-title"><span class="panel-dot"></span>{attentionLabel}</p>
     <ul>
       {
@@ -69,6 +69,7 @@ const readings = [
   }
 
   .preview-window {
+    position: relative;
     overflow: hidden;
   }
 

@@ -1,12 +1,20 @@
+import { driftBeansOnScroll } from "./bean-drift";
 import { showCoffeeCount } from "./coffee-count";
 import { enableTagCopy } from "./copy-tag";
+import { followPointerOnGlass } from "./glass-glow";
 import { loadLiveDemo } from "./live-demo";
+import { glidePillAcrossNav } from "./nav-pill";
 import { trackNavScroll } from "./nav-state";
 import { revealOnScroll } from "./reveal";
 import { scrambleOnReveal } from "./scramble";
+import { stretchStarsOnScroll } from "./scroll-stars";
 import { typeInstallTag } from "./typewriter";
 
 trackNavScroll();
+glidePillAcrossNav();
+followPointerOnGlass();
+stretchStarsOnScroll();
+driftBeansOnScroll();
 revealOnScroll();
 enableTagCopy();
 typeInstallTag();

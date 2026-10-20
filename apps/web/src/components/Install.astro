@@ -11,6 +11,7 @@ const tag = '<script defer src="https://devlytics.gabrueldev.com/t.js"></script>
 ---
 
 <section class="section install" id="install" data-install>
+  <canvas class="stars" data-stars aria-hidden="true"></canvas>
   <div class="container">
     <div class="section-head reveal">
       <h2 class="section-title">{t.install.title}</h2>
@@ -18,7 +19,7 @@ const tag = '<script defer src="https://devlytics.gabrueldev.com/t.js"></script>
     </div>
 
     <div class="install-layout">
-      <div class="install-editor glass-plate reveal">
+      <div class="install-editor glass-plate reveal" data-glow>
         <div class="editor-bar">
           <span></span><span></span><span></span>
           <p>index.html</p>
@@ -70,6 +71,19 @@ const tag = '<script defer src="https://devlytics.gabrueldev.com/t.js"></script>
 </section>
 
 <style>
+  .stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    contain: strict;
+  }
+
+  .install > .container {
+    position: relative;
+  }
+
   .install-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -78,6 +92,7 @@ const tag = '<script defer src="https://devlytics.gabrueldev.com/t.js"></script>
   }
 
   .install-editor {
+    position: relative;
     overflow: hidden;
   }
 

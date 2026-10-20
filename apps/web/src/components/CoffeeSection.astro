@@ -12,7 +12,7 @@ const beans = ["bean-a", "bean-b", "bean-c", "bean-d"];
 const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 ---
 
-<section class="section coffee-section" id="coffee">
+<section class="section coffee-section" id="coffee" data-bean-drift>
   {
     edgeBeans.map((bean) => (
       <img class={`edge-bean ${bean}`} src="/coffee/bean.webp" width="144" height="191" alt="" aria-hidden="true" loading="lazy" decoding="async" />
@@ -50,6 +50,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 
   .edge-bean {
     position: absolute;
+    translate: 0 calc(var(--lag, 0px) * var(--depth));
     width: var(--size);
     height: auto;
     transform: rotate(var(--turn));
@@ -61,6 +62,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 
   .edge-a {
     --size: clamp(8rem, 22vw, 17rem);
+    --depth: 1.8;
     --turn: 24deg;
     --blur: 3px;
     --pace: 8s;
@@ -71,6 +73,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 
   .edge-b {
     --size: clamp(6rem, 16vw, 12rem);
+    --depth: 1.4;
     --turn: -48deg;
     --blur: 4px;
     --pace: 9s;
@@ -81,6 +84,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 
   .edge-c {
     --size: clamp(4.5rem, 10vw, 7.5rem);
+    --depth: 1;
     --turn: 112deg;
     --blur: 1.5px;
     --pace: 7s;
@@ -122,6 +126,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 
   .coffee-bean {
     position: absolute;
+    translate: 0 calc(var(--lag, 0px) * var(--depth, 0.4));
     width: var(--size);
     height: auto;
     transform: rotate(var(--turn));

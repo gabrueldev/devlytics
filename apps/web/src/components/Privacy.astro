@@ -33,7 +33,7 @@ const inputRows = [36, 92, 148, 204];
       </ul>
     </div>
 
-    <figure class="hash-flow glass-plate reveal" data-hash-flow>
+    <figure class="hash-flow glass-plate reveal" data-hash-flow data-glow>
       <div class="hash-stage">
         <ul class="hash-inputs">
           {t.privacy.inputs.map((input, index) => <li style={`--order: ${index}`}>{input}</li>)}
@@ -93,6 +93,7 @@ const inputRows = [36, 92, 148, 204];
   }
 
   .hash-flow {
+    position: relative;
     margin: 0;
     padding: clamp(1.25rem, 3vw, 2rem);
   }

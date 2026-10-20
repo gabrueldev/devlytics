@@ -51,12 +51,12 @@ export const linkRoutes = new Hono<AppEnv>()
   )
   .get("/sites/:siteId/links/:linkId/timeline", (c) =>
     handled(c, async () => {
-      const { link, visits } = await buildContainer(c.env).getLinkTimeline(
+      const { link, visits, funnel } = await buildContainer(c.env).getLinkTimeline(
         c.get("userId"),
         c.req.param("siteId"),
         c.req.param("linkId"),
       );
-      return c.json({ link: linkJson(link), visits });
+      return c.json({ link: linkJson(link), visits, funnel });
     }),
   );
 

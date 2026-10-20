@@ -10,6 +10,7 @@ import { fillDays, renderDailyChart } from "./daily-chart";
 import { Formatter } from "./formatting";
 import { LinksPanel } from "./links-panel";
 import { mountNewSiteForm } from "./new-site-form";
+import { renderFunnel } from "./funnel-chart";
 import { renderProjectsTable } from "./projects-table";
 import { renderRankedList, type RankedRow } from "./ranked-list";
 import { renderWorldMap } from "./world-map";
@@ -125,6 +126,7 @@ async function startDashboard(root: HTMLElement): Promise<void> {
     renderProjectsTable(find("[data-projects]"), report.projects, texts.projects, format);
 
     const names = texts.conversions.names as Record<string, string>;
+    renderFunnel(find("[data-funnel]"), report.funnel, report.conversions, names, texts.funnel, format);
     const ranked = (key: string, rows: RankedRow[], empty: string) =>
       renderRankedList(find(`[data-ranked=${key}]`), rows, empty);
 

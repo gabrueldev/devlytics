@@ -230,6 +230,20 @@ export const en: Dictionary = {
       repoClicks: "Repository clicks",
     },
     daily: "Visits per day",
+    funnel: {
+      title: "From click to contact",
+      label: "Visit funnel",
+      empty: "No visits arrived in this period yet.",
+      ofTotal: "{percent}% of all",
+      dropped: "−{percent}% here",
+      stages: {
+        arrived: { name: "Arrived", hint: "opened the site" },
+        stayed: { name: "Stayed", hint: "looked for more than 10s" },
+        viewedProjects: { name: "Saw projects", hint: "a project showed up on screen" },
+        openedProject: { name: "Opened a project", hint: "repository or demo" },
+        contacted: { name: "Reached out", hint: "e-mail, WhatsApp, LinkedIn or résumé" },
+      },
+    },
     visitsOn: "{count} visits on {day}",
     projects: {
       title: "Projects",
@@ -279,6 +293,7 @@ export const en: Dictionary = {
       invalid: "Give the link a name.",
       taken: "There is already a link with that name on this site.",
       failed: "Could not save it. Try again.",
+      journey: "How far they got",
       timeline: "Visits through this link",
       loadingTimeline: "Loading visits…",
       noVisits: "Nobody opened this link yet.",

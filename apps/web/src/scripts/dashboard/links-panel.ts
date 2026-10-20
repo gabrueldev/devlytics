@@ -1,6 +1,7 @@
 import type { Dictionary } from "../../i18n";
 import { DashboardApiError, type DashboardApi, type LinkVisit, type TrackedLink } from "./dashboard-api";
 import type { Formatter } from "./formatting";
+import { renderJourneyTrail } from "./funnel-chart";
 
 type Texts = Dictionary["dashboard"];
 const copiedFeedbackMs = 1600;
@@ -152,12 +153,19 @@ export class LinksPanel {
     container.replaceChildren(text("h3", "", t.timeline), text("p", "visit-empty", t.loadingTimeline));
     if (!this.site) return;
     try {
-      const { visits } = await this.api.timeline(this.site.id, link.id);
-      const body =
-        visits.length === 0
-          ? [text("p", "visit-empty", t.noVisits)]
-          : visits.map((visit) => this.visitCard(visit));
-      container.replaceChildren(text("h3", "", t.timeline), ...body);
+      const { visits, funnel } = await this.api.timeline(this.site.id, link.id);
+      if (visits.length === 0) {
+        container.replaceChildren(text("h3", "", t.timeline), text("p", "visit-empty", t.noVisits));
+        return;
+      }
+      const trail = node("div", "link-journey");
+      renderJourneyTrail(trail, funnel, this.texts.funnel, this.format);
+      container.replaceChildren(
+        text("h3", "", t.journey),
+        trail,
+        text("h3", "", t.timeline),
+        ...visits.map((visit) => this.visitCard(visit)),
+      );
     } catch {
       container.replaceChildren(text("h3", "", t.timeline), text("p", "visit-empty", t.timelineError));
     }

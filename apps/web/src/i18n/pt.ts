@@ -228,6 +228,20 @@ export const pt = {
       repoClicks: "Cliques em repositórios",
     },
     daily: "Visitas por dia",
+    funnel: {
+      title: "Do clique ao contato",
+      label: "Funil de visitas",
+      empty: "Ainda não chegou nenhuma visita neste período.",
+      ofTotal: "{percent}% do total",
+      dropped: "−{percent}% aqui",
+      stages: {
+        arrived: { name: "Chegaram", hint: "abriram o site" },
+        stayed: { name: "Ficaram", hint: "mais de 10s olhando" },
+        viewedProjects: { name: "Viram projetos", hint: "algum projeto apareceu na tela" },
+        openedProject: { name: "Abriram um projeto", hint: "repositório ou demo" },
+        contacted: { name: "Chamaram você", hint: "e-mail, WhatsApp, LinkedIn ou currículo" },
+      },
+    },
     visitsOn: "{count} visitas em {day}",
     projects: {
       title: "Projetos",
@@ -277,6 +291,7 @@ export const pt = {
       invalid: "Escreva um nome para o link.",
       taken: "Já existe um link com esse nome neste site.",
       failed: "Não deu para salvar. Tente de novo.",
+      journey: "Até onde chegaram",
       timeline: "Visitas por este link",
       loadingTimeline: "Carregando visitas…",
       noVisits: "Ninguém abriu este link ainda.",

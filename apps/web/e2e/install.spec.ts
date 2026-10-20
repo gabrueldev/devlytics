@@ -39,6 +39,7 @@ test("registers a first site and shows the tag to install", async ({ page }) => 
     conversions: [],
     sources: [],
     countries: [],
+    funnel: [],
   });
 
   await page.goto("/painel");

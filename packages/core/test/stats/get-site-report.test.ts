@@ -13,6 +13,10 @@ const data: SiteReportData = {
   conversions: [],
   sources: [],
   countries: [],
+  journeys: [
+    { attentionMs: 2_000, viewedProjects: false, actions: [] },
+    { attentionMs: 30_000, viewedProjects: true, actions: ["linkedin"] },
+  ],
 };
 
 describe("getSiteReport", () => {
@@ -27,6 +31,8 @@ describe("getSiteReport", () => {
     expect(periods).toEqual([{ since: new Date("2026-10-13T15:00:00Z"), until: now }]);
     expect(report.averageAttentionMs).toBe(25_000);
     expect(report.site).toEqual({ id: "site_1", name: "Fulano", domain: "fulano.dev" });
+    expect(report.funnel.map((step) => step.sessions)).toEqual([2, 1, 1, 1, 1]);
+    expect(report).not.toHaveProperty("journeys");
   });
 
   it("hides other developers' sites", async () => {

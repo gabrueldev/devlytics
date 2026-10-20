@@ -22,6 +22,11 @@ export interface ProjectStats {
   demoClicks: number;
 }
 
+export interface FunnelStep {
+  stage: "arrived" | "stayed" | "viewedProjects" | "openedProject" | "contacted";
+  sessions: number;
+}
+
 export interface SiteReport {
   site: SiteSummary;
   period: { days: number; since: string; until: string };
@@ -33,6 +38,7 @@ export interface SiteReport {
   conversions: Ranked[];
   sources: Ranked[];
   countries: Ranked[];
+  funnel: FunnelStep[];
 }
 
 export interface TrackedLink {
@@ -102,7 +108,10 @@ export class DashboardApi {
     });
   }
 
-  timeline(siteId: string, linkId: string): Promise<{ link: TrackedLink; visits: LinkVisit[] }> {
+  timeline(
+    siteId: string,
+    linkId: string,
+  ): Promise<{ link: TrackedLink; visits: LinkVisit[]; funnel: FunnelStep[] }> {
     return this.request(`/sites/${encodeURIComponent(siteId)}/links/${encodeURIComponent(linkId)}/timeline`);
   }
 

@@ -1,3 +1,5 @@
+import type { FunnelStep, SessionJourney } from "./funnel";
+
 export interface DailyVisits {
   day: string;
   visits: number;
@@ -25,10 +27,12 @@ export interface SiteReportData {
   conversions: Ranked[];
   sources: Ranked[];
   countries: Ranked[];
+  journeys: SessionJourney[];
 }
 
-export interface SiteReport extends SiteReportData {
+export interface SiteReport extends Omit<SiteReportData, "journeys"> {
   site: { id: string; name: string; domain: string };
   period: { days: number; since: string; until: string };
   averageAttentionMs: number;
+  funnel: FunnelStep[];
 }

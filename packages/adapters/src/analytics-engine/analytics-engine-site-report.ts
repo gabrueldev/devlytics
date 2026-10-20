@@ -1,4 +1,4 @@
-import type { Ranked, SiteReportData, SiteReportReader, StatsPeriod } from "@devlytics/core";
+import type { Ranked, SessionJourney, SiteReportData, SiteReportReader, StatsPeriod } from "@devlytics/core";
 import { eventBlobColumns, eventDoubleColumns } from "./event-data-point";
 import type { SqlRow, SqlRunner } from "./sql-runner";
 
@@ -9,6 +9,7 @@ const safeIdentifier = /^[\w-]+$/;
 const rankedLimit = 10;
 const countryLimit = 80;
 const projectLimit = 20;
+const journeyLimit = 20_000;
 
 const blob = (name: BlobName) => `blob${eventBlobColumns.indexOf(name) + 1}`;
 const double = (name: DoubleName) => `double${eventDoubleColumns.indexOf(name) + 1}`;
@@ -25,39 +26,56 @@ export class AnalyticsEngineSiteReport implements SiteReportReader {
     const scope = this.scopeOf(siteId, period);
     const type = (value: string) => `${blob("type")} = '${value}'`;
 
-    const [visits, sectionTotal, daily, projects, projectClicks, sections, conversions, sources, countries] =
-      await Promise.all([
-        this.sql.query(`SELECT COUNT(DISTINCT ${blob("session")}) AS total ${scope}`),
-        this.sql.query(
-          `SELECT ${attentionMs} AS total ${scope} AND ${type("attention")} AND ${blob("kind")} = 'section'`,
-        ),
-        this.sql.query(
-          `SELECT toStartOfInterval(timestamp, INTERVAL '1' DAY) AS day, COUNT(DISTINCT ${blob("session")}) AS total ${scope} GROUP BY day ORDER BY day`,
-        ),
-        this.sql.query(
-          `SELECT ${blob("target")} AS name, ${attentionMs} AS attention, COUNT(DISTINCT ${blob("session")}) AS visitors ${scope} AND ${type("attention")} AND ${blob("kind")} = 'project' GROUP BY name ORDER BY attention DESC LIMIT ${projectLimit}`,
-        ),
-        this.sql.query(
-          `SELECT ${blob("project")} AS name, ${blob("action")} AS action, ${sampledCount} AS total ${scope} AND ${type("click")} AND ${blob("project")} != '' GROUP BY name, action`,
-        ),
-        this.ranked(
-          `${blob("target")}`,
-          attentionMs,
-          `${scope} AND ${type("attention")} AND ${blob("kind")} = 'section'`,
-        ),
-        this.ranked(`${blob("action")}`, sampledCount, `${scope} AND ${type("click")}`),
-        this.ranked(
-          `${blob("referrer")}`,
-          `COUNT(DISTINCT ${blob("session")})`,
-          `${scope} AND ${type("pageview")}`,
-        ),
-        this.ranked(
-          `${blob("country")}`,
-          `COUNT(DISTINCT ${blob("session")})`,
-          `${scope} AND ${type("pageview")}`,
-          countryLimit,
-        ),
-      ]);
+    const [
+      visits,
+      sectionTotal,
+      daily,
+      projects,
+      projectClicks,
+      sections,
+      conversions,
+      sources,
+      countries,
+      sessionAttention,
+      sessionActions,
+    ] = await Promise.all([
+      this.sql.query(`SELECT COUNT(DISTINCT ${blob("session")}) AS total ${scope}`),
+      this.sql.query(
+        `SELECT ${attentionMs} AS total ${scope} AND ${type("attention")} AND ${blob("kind")} = 'section'`,
+      ),
+      this.sql.query(
+        `SELECT toStartOfInterval(timestamp, INTERVAL '1' DAY) AS day, COUNT(DISTINCT ${blob("session")}) AS total ${scope} GROUP BY day ORDER BY day`,
+      ),
+      this.sql.query(
+        `SELECT ${blob("target")} AS name, ${attentionMs} AS attention, COUNT(DISTINCT ${blob("session")}) AS visitors ${scope} AND ${type("attention")} AND ${blob("kind")} = 'project' GROUP BY name ORDER BY attention DESC LIMIT ${projectLimit}`,
+      ),
+      this.sql.query(
+        `SELECT ${blob("project")} AS name, ${blob("action")} AS action, ${sampledCount} AS total ${scope} AND ${type("click")} AND ${blob("project")} != '' GROUP BY name, action`,
+      ),
+      this.ranked(
+        `${blob("target")}`,
+        attentionMs,
+        `${scope} AND ${type("attention")} AND ${blob("kind")} = 'section'`,
+      ),
+      this.ranked(`${blob("action")}`, sampledCount, `${scope} AND ${type("click")}`),
+      this.ranked(
+        `${blob("referrer")}`,
+        `COUNT(DISTINCT ${blob("session")})`,
+        `${scope} AND ${type("pageview")}`,
+      ),
+      this.ranked(
+        `${blob("country")}`,
+        `COUNT(DISTINCT ${blob("session")})`,
+        `${scope} AND ${type("pageview")}`,
+        countryLimit,
+      ),
+      this.sql.query(
+        `SELECT ${blob("session")} AS session, SUM(IF(${type("attention")} AND ${blob("kind")} = 'section', ${double("value")}, 0.0)) AS attention, SUM(IF(${type("attention")} AND ${blob("kind")} = 'project', 1, 0)) AS projectViews ${scope} GROUP BY session LIMIT ${journeyLimit}`,
+      ),
+      this.sql.query(
+        `SELECT ${blob("session")} AS session, ${blob("action")} AS action ${scope} AND ${type("click")} GROUP BY session, action LIMIT ${journeyLimit}`,
+      ),
+    ]);
 
     const clicks = clicksByProject(projectClicks);
 
@@ -79,6 +97,7 @@ export class AnalyticsEngineSiteReport implements SiteReportReader {
       conversions,
       sources,
       countries,
+      journeys: journeysOf(sessionAttention, sessionActions),
     };
   }
 
@@ -114,6 +133,19 @@ function clicksByProject(rows: SqlRow[]): Map<string, Map<string, number>> {
     clicks.set(project, byAction);
   }
   return clicks;
+}
+
+function journeysOf(attention: SqlRow[], actions: SqlRow[]): SessionJourney[] {
+  const actionsBySession = new Map<string, string[]>();
+  for (const row of actions) {
+    const session = String(row["session"]);
+    actionsBySession.set(session, [...(actionsBySession.get(session) ?? []), String(row["action"])]);
+  }
+  return attention.map((row) => ({
+    attentionMs: numberOf(row["attention"]),
+    viewedProjects: numberOf(row["projectViews"]) > 0,
+    actions: actionsBySession.get(String(row["session"])) ?? [],
+  }));
 }
 
 function totalOf(rows: SqlRow[]): number {

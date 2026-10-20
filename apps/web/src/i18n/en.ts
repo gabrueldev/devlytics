@@ -119,8 +119,6 @@ export const en: Dictionary = {
       note: "If Devlytics helps you, you can give back:",
       button: "Buy me a coffee",
       price: "$2.50",
-      local: "",
-      charged: "",
       one: "1 coffee received so far",
       many: "{count} coffees received so far",
     },

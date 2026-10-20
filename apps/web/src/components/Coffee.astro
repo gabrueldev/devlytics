@@ -16,12 +16,8 @@ const { coffee } = dictionaryFor(locale).free;
   <a class="btn btn-primary coffee-button" href={coffeeCheckoutUrl} rel="noopener" data-track="coffee">
     <CoffeeCup />
     <span>{coffee.button}</span>
-    <span class="coffee-price">
-      {coffee.price}
-      {coffee.local && <small>({coffee.local})</small>}
-    </span>
+    <span class="coffee-price">{coffee.price}</span>
   </a>
-  {coffee.local && <p class="coffee-local">{coffee.charged.replace("{amount}", coffee.local)}</p>}
   <p class="coffee-count" data-coffee-count hidden></p>
 </div>
 
@@ -44,36 +40,10 @@ const { coffee } = dictionaryFor(locale).free;
     white-space: nowrap;
   }
 
-  .coffee-local {
-    display: none;
-    color: var(--text-mute);
-    font-size: 0.8rem;
-    margin-top: -0.35rem;
-  }
-
   .coffee-price {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
     padding-left: 0.7rem;
     margin-left: 0.15rem;
     border-left: 1px solid rgba(255, 255, 255, 0.25);
-  }
-
-  .coffee-price small {
-    font-weight: 500;
-    font-size: 0.8rem;
-    opacity: 0.7;
-  }
-
-  @media (max-width: 30rem) {
-    .coffee-price small {
-      display: none;
-    }
-
-    .coffee-local {
-      display: block;
-    }
   }
 
   .coffee-count {

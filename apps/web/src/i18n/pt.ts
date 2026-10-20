@@ -117,8 +117,6 @@ export const pt = {
       note: "Se o Devlytics te ajudar, dá para retribuir:",
       button: "Me pague um café",
       price: "US$ 2,50",
-      local: "R$ 12,61",
-      charged: "Cobrado em reais: {amount}",
       one: "1 café recebido até agora",
       many: "{count} cafés recebidos até agora",
     },

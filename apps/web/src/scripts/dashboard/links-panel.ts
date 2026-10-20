@@ -4,7 +4,7 @@ import type { Formatter } from "./formatting";
 
 type Texts = Dictionary["dashboard"];
 const copiedFeedbackMs = 1600;
-const disarmAfterMs = 3000;
+const disarmAfterMs = 5000;
 
 export class LinksPanel {
   private site: { id: string; domain: string } | null = null;

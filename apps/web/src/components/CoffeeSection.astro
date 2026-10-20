@@ -40,7 +40,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 <style>
   .coffee-section {
     position: relative;
-    overflow: clip;
+    overflow-x: clip;
   }
 
   .coffee-layout {
@@ -56,6 +56,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
     filter: drop-shadow(0 24px 30px rgba(70, 36, 12, 0.22)) blur(var(--blur));
     animation: bean-float var(--pace) ease-in-out var(--delay) infinite alternate;
     pointer-events: none;
+    z-index: -1;
   }
 
   .edge-a {
@@ -64,7 +65,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
     --blur: 3px;
     --pace: 8s;
     --delay: -1s;
-    bottom: -9rem;
+    bottom: -13rem;
     left: 22%;
   }
 
@@ -74,7 +75,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
     --blur: 4px;
     --pace: 9s;
     --delay: -4s;
-    top: -2.5rem;
+    top: -6rem;
     right: -2rem;
   }
 
@@ -84,7 +85,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
     --blur: 1.5px;
     --pace: 7s;
     --delay: -2.5s;
-    top: -1.5rem;
+    top: -4rem;
     left: 6%;
   }
 
@@ -181,7 +182,7 @@ const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 
   @media (max-width: 859px) {
     .edge-a {
-      bottom: -5rem;
+      bottom: -8rem;
       left: -3rem;
     }
 

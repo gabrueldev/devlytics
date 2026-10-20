@@ -6,6 +6,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "routes": [{ "pattern": "devlytics.gabrueldev.com", "custom_domain": true }],
   "observability": { "enabled": true },
+  "assets": { "directory": "../../packages/tracker/dist" },
+  "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "devlytics_events" }],
   "d1_databases": [
     {
       "binding": "DB",

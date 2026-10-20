@@ -12,6 +12,7 @@
   "dependencies": {
     "@devlytics/core": "workspace:*",
     "@devlytics/db": "workspace:*",
+    "@devlytics/shared": "workspace:*",
     "drizzle-orm": "0.45.4"
   },
   "devDependencies": {

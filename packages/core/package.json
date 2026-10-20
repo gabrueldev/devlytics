@@ -13,5 +13,8 @@
     "@cloudflare/workers-types": "5.20261019.1",
     "typescript": "6.0.3",
     "vitest": "4.1.12"
+  },
+  "dependencies": {
+    "@devlytics/shared": "workspace:*"
   }
 }

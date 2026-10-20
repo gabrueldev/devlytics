@@ -17,4 +17,5 @@ Everything is served from `devlytics.gabrueldev.com`. The Worker that owns the h
 ## Consequences
 
 - The tracker and the dashboard share one origin, so the API needs no CORS for its own site.
+- Static asset requests are free and do not count against the Workers request quota, so loading the tracker costs nothing however many portfolios install it.
 - Until `web` exists, `ingest` owns the custom domain. When `web` ships it takes the custom domain and `ingest` moves to routes for `/t.js` and `/e`.

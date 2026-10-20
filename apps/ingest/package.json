@@ -11,9 +11,14 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@devlytics/adapters": "workspace:*",
+    "@devlytics/core": "workspace:*",
+    "@devlytics/db": "workspace:*",
+    "@devlytics/shared": "workspace:*",
     "hono": "4.13.13"
   },
   "devDependencies": {
+    "@devlytics/tracker": "workspace:*",
     "@cloudflare/vitest-plugin": "1.4.4",
     "typescript": "6.0.3",
     "vitest": "4.1.12",

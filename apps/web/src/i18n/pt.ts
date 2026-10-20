@@ -253,7 +253,13 @@ export const pt = {
       },
     },
     sources: { title: "Origens", direct: "Direto ou desconhecido", empty: "Nenhuma visita ainda." },
-    countries: { title: "Países", unknown: "Desconhecido", empty: "Nenhuma visita ainda." },
+    countries: {
+      title: "De onde vêm as visitas",
+      unknown: "Desconhecido",
+      empty: "Nenhuma visita ainda.",
+      mapLabel: "Mapa-múndi com uma bolinha em cada país que visitou o site",
+      tip: "{country}: {count} visitas",
+    },
     tabs: { overview: "Visão geral", links: "Links rastreados" },
     links: {
       title: "Links rastreados",

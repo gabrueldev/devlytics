@@ -7,6 +7,7 @@ type DoubleName = (typeof eventDoubleColumns)[number];
 
 const safeIdentifier = /^[\w-]+$/;
 const rankedLimit = 10;
+const countryLimit = 80;
 const projectLimit = 20;
 
 const blob = (name: BlobName) => `blob${eventBlobColumns.indexOf(name) + 1}`;
@@ -54,6 +55,7 @@ export class AnalyticsEngineSiteReport implements SiteReportReader {
           `${blob("country")}`,
           `COUNT(DISTINCT ${blob("session")})`,
           `${scope} AND ${type("pageview")}`,
+          countryLimit,
         ),
       ]);
 
@@ -80,9 +82,14 @@ export class AnalyticsEngineSiteReport implements SiteReportReader {
     };
   }
 
-  private async ranked(column: string, measure: string, from: string): Promise<Ranked[]> {
+  private async ranked(
+    column: string,
+    measure: string,
+    from: string,
+    limit = rankedLimit,
+  ): Promise<Ranked[]> {
     const rows = await this.sql.query(
-      `SELECT ${column} AS name, ${measure} AS value ${from} GROUP BY name ORDER BY value DESC LIMIT ${rankedLimit}`,
+      `SELECT ${column} AS name, ${measure} AS value ${from} GROUP BY name ORDER BY value DESC LIMIT ${limit}`,
     );
     return rows.map((row) => ({ name: String(row["name"] ?? ""), value: numberOf(row["value"]) }));
   }

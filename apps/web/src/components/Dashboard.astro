@@ -141,7 +141,15 @@ const githubIcon =
           </section>
         </div>
 
-        <div class="dash-grid dash-grid--three">
+        <section class="dash-card dash-map-card glass-plate">
+          <h2>{t.countries.title}</h2>
+          <div class="dash-map-layout">
+            <div class="dash-map" data-world-map></div>
+            <ol class="dash-bars" data-ranked="countries"></ol>
+          </div>
+        </section>
+
+        <div class="dash-grid dash-grid--two-even">
           <section class="dash-card glass-plate">
             <h2>{t.conversions.title}</h2>
             <ol class="dash-bars" data-ranked="conversions"></ol>
@@ -149,10 +157,6 @@ const githubIcon =
           <section class="dash-card glass-plate">
             <h2>{t.sources.title}</h2>
             <ol class="dash-bars" data-ranked="sources"></ol>
-          </section>
-          <section class="dash-card glass-plate">
-            <h2>{t.countries.title}</h2>
-            <ol class="dash-bars" data-ranked="countries"></ol>
           </section>
         </div>
       </div>
@@ -695,6 +699,98 @@ const githubIcon =
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .dash-grid--two-even {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dash-map-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+    gap: 1.5rem 2rem;
+    align-items: center;
+  }
+
+  .dash-map {
+    position: relative;
+  }
+
+  .dash-map :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .dash-map :global(.map-land) {
+    fill: rgba(17, 17, 22, 0.16);
+  }
+
+  .dash-map :global(.map-place) {
+    cursor: default;
+    animation: map-drop 0.6s var(--ease) var(--delay) backwards;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .dash-map :global(.map-bubble) {
+    fill: rgba(var(--brand-rgb), 0.78);
+    stroke: var(--surface);
+    stroke-width: 0.3;
+    transition: fill 0.2s var(--ease);
+  }
+
+  .dash-map :global(.map-place.is-active .map-bubble) {
+    fill: var(--brand-deep);
+  }
+
+  .dash-map :global(.map-pulse) {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 0.35;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: map-pulse 2.4s var(--ease) infinite;
+  }
+
+  .dash-map :global(.chart-tip) {
+    position: absolute;
+    top: 0;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    background: var(--text);
+    color: #fff;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translate(-50%, -125%);
+  }
+
+  @keyframes map-drop {
+    from {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+  }
+
+  @keyframes map-pulse {
+    from {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(2.6);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dash-map :global(.map-place),
+    .dash-map :global(.map-pulse) {
+      animation: none;
+    }
+  }
+
   .dash-chart {
     position: relative;
   }
@@ -901,7 +997,9 @@ const githubIcon =
     }
 
     .dash-grid--two,
-    .dash-grid--three {
+    .dash-grid--three,
+    .dash-grid--two-even,
+    .dash-map-layout {
       grid-template-columns: minmax(0, 1fr);
     }
   }

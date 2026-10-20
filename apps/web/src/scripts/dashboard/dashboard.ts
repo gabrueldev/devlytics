@@ -12,6 +12,7 @@ import { LinksPanel } from "./links-panel";
 import { mountNewSiteForm } from "./new-site-form";
 import { renderProjectsTable } from "./projects-table";
 import { renderRankedList, type RankedRow } from "./ranked-list";
+import { renderWorldMap } from "./world-map";
 
 type View = "loading" | "signed-out" | "onboarding" | "report";
 type Texts = Dictionary["dashboard"];
@@ -20,6 +21,7 @@ const periods = [7, 30, 90];
 const lastSiteKey = "devlytics-dashboard-site";
 const pendingLinkKey = "devlytics-dashboard-link";
 const disarmAfterMs = 3000;
+const listedCountries = 8;
 
 const root = document.querySelector<HTMLElement>("[data-dashboard]");
 if (root !== null) void startDashboard(root);
@@ -155,12 +157,18 @@ async function startDashboard(root: HTMLElement): Promise<void> {
     );
     ranked(
       "countries",
-      report.countries.map((row) => ({
+      report.countries.slice(0, listedCountries).map((row) => ({
         name: format.country(row.name) ?? texts.countries.unknown,
         value: row.value,
         display: format.count(row.value),
       })),
       texts.countries.empty,
+    );
+    renderWorldMap(
+      find("[data-world-map]"),
+      report.countries.map((row) => ({ code: row.name, visits: row.value })),
+      format,
+      { label: texts.countries.mapLabel, tip: texts.countries.tip },
     );
   };
 

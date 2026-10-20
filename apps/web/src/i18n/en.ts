@@ -255,7 +255,13 @@ export const en: Dictionary = {
       },
     },
     sources: { title: "Sources", direct: "Direct or unknown", empty: "No visits yet." },
-    countries: { title: "Countries", unknown: "Unknown", empty: "No visits yet." },
+    countries: {
+      title: "Where visits come from",
+      unknown: "Unknown",
+      empty: "No visits yet.",
+      mapLabel: "World map with a dot on every country that visited the site",
+      tip: "{country}: {count} visits",
+    },
     tabs: { overview: "Overview", links: "Tracked links" },
     links: {
       title: "Tracked links",

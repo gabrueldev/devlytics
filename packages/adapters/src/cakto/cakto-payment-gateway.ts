@@ -24,7 +24,7 @@ export class CaktoPaymentGateway implements PaymentGateway {
   constructor(
     private readonly tokens: CaktoAccessTokens,
     private readonly offerId: string,
-    private readonly send: typeof fetch = fetch,
+    private readonly send: typeof fetch = (input, init) => fetch(input, init),
   ) {}
 
   async chargePix(request: PixChargeRequest): Promise<PixCharge> {

@@ -15,7 +15,7 @@ const tokensByClient = new Map<string, CachedToken>();
 export class CaktoAccessTokens {
   constructor(
     private readonly credentials: CaktoCredentials,
-    private readonly send: typeof fetch = fetch,
+    private readonly send: typeof fetch = (input, init) => fetch(input, init),
     private readonly now: () => number = Date.now,
   ) {}
 

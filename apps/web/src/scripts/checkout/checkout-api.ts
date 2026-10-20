@@ -12,7 +12,10 @@ export interface CardCharge {
 }
 
 export class CheckoutError extends Error {
-  constructor(readonly failure: CheckoutFailure) {
+  constructor(
+    readonly failure: CheckoutFailure,
+    readonly fields: string[] = [],
+  ) {
     super(failure);
     this.name = "CheckoutError";
   }
@@ -54,7 +57,7 @@ export class CheckoutApi {
     }
 
     if (response.ok) return (await response.json()) as Result;
-    throw new CheckoutError(failureOf(response.status));
+    throw new CheckoutError(failureOf(response.status), await invalidFieldsOf(response));
   }
 }
 
@@ -63,4 +66,13 @@ function failureOf(status: number): CheckoutFailure {
   if (status === 429) return "busy";
   if (status === 502) return "rejected";
   return "unavailable";
+}
+
+async function invalidFieldsOf(response: Response): Promise<string[]> {
+  try {
+    const { fields } = (await response.json()) as { fields?: unknown };
+    return Array.isArray(fields) ? fields.filter((field): field is string => typeof field === "string") : [];
+  } catch {
+    return [];
+  }
 }

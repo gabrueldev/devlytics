@@ -14,8 +14,9 @@ export const coffeeCheckoutRoutes = new Hono<AppEnv>()
   .use("/coffees/card", checkoutCors)
   .use("/coffees/orders/*", checkoutCors)
   .post("/coffees/pix", checkoutGuard, async (c) => {
-    const request = await bodyOf(c, pixCoffeeRequestSchema);
-    if (request === null) return c.json({ error: "invalid_request" }, 400);
+    const parsed = await bodyOf(c, pixCoffeeRequestSchema);
+    if (!parsed.success) return invalidRequest(c, parsed.fields);
+    const request = parsed.data;
 
     return charging(c, async () => {
       const charge = await buildContainer(c.env).chargePixCoffee({ ...request, ip: buyerIp(c) });
@@ -26,8 +27,9 @@ export const coffeeCheckoutRoutes = new Hono<AppEnv>()
     });
   })
   .post("/coffees/card", checkoutGuard, async (c) => {
-    const request = await bodyOf(c, cardCoffeeRequestSchema);
-    if (request === null) return c.json({ error: "invalid_request" }, 400);
+    const parsed = await bodyOf(c, cardCoffeeRequestSchema);
+    if (!parsed.success) return invalidRequest(c, parsed.fields);
+    const request = parsed.data;
 
     return charging(c, async () => {
       const charge = await buildContainer(c.env).chargeCardCoffee({ ...request, ip: buyerIp(c) });
@@ -42,16 +44,27 @@ export const coffeeCheckoutRoutes = new Hono<AppEnv>()
     return c.json({ paid: await buildContainer(c.env).isCoffeePaid(orderId) });
   });
 
+type Parsed<Data> = { success: true; data: Data } | { success: false; fields: string[] };
+
 async function bodyOf<Schema extends z.ZodType>(
   c: Context<AppEnv>,
   schema: Schema,
-): Promise<z.infer<Schema> | null> {
+): Promise<Parsed<z.infer<Schema>>> {
+  let body: unknown;
   try {
-    const parsed = schema.safeParse(await c.req.json());
-    return parsed.success ? parsed.data : null;
+    body = await c.req.json();
   } catch {
-    return null;
+    return { success: false, fields: [] };
   }
+
+  const parsed = schema.safeParse(body);
+  if (parsed.success) return { success: true, data: parsed.data };
+  return { success: false, fields: [...new Set(parsed.error.issues.map((issue) => issue.path.join(".")))] };
+}
+
+function invalidRequest(c: Context<AppEnv>, fields: string[]): Response {
+  console.warn("Invalid checkout request", { fields });
+  return c.json({ error: "invalid_request", fields }, 400);
 }
 
 async function charging(c: Context<AppEnv>, charge: () => Promise<Response>): Promise<Response> {

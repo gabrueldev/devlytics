@@ -93,6 +93,14 @@ function startCheckout(root: HTMLElement): void {
     return valid;
   };
 
+  const markInvalid = (fields: string[]) => {
+    fields
+      .filter((field) => field.startsWith("payer."))
+      .forEach((field) =>
+        form.querySelector(`input[name="${field.slice(6)}"]`)?.setAttribute("aria-invalid", "true"),
+      );
+  };
+
   const payWithPix = async () => {
     const charge = await api.startPix({ payer: payerOf(), fingerprint, idempotencyKey: crypto.randomUUID() });
     const expiresAt = new Date(charge.expiresAt);
@@ -159,6 +167,7 @@ function startCheckout(root: HTMLElement): void {
     try {
       await (method() === "card" ? payWithCard() : payWithPix());
     } catch (error) {
+      if (error instanceof CheckoutError) markInvalid(error.fields);
       showError(error instanceof CheckoutError ? error.failure : "unavailable");
     } finally {
       submit.disabled = false;

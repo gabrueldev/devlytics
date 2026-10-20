@@ -5,14 +5,15 @@ import CoffeeCup from "./CoffeeCup.astro";
 
 interface Props {
   locale: Locale;
+  plain?: boolean;
 }
 
-const { locale } = Astro.props;
+const { locale, plain = false } = Astro.props;
 const { coffee } = dictionaryFor(locale).free;
 ---
 
-<div class="coffee" data-coffee data-one={coffee.one} data-many={coffee.many} data-locale={dictionaryFor(locale).locale}>
-  <p class="coffee-note">{coffee.note}</p>
+<div class:list={["coffee", { "coffee--plain": plain }]} data-coffee data-one={coffee.one} data-many={coffee.many} data-locale={dictionaryFor(locale).locale}>
+  {!plain && <p class="coffee-note">{coffee.note}</p>}
   <a class="btn btn-primary coffee-button" href={coffeePathFor(locale)} data-track="coffee">
     <CoffeeCup />
     <span>{coffee.button}</span>
@@ -29,6 +30,12 @@ const { coffee } = dictionaryFor(locale).free;
     margin-top: 3rem;
     padding-top: 2.5rem;
     border-top: 1px solid var(--line);
+  }
+
+  .coffee--plain {
+    margin-top: 2rem;
+    padding-top: 0;
+    border-top: 0;
   }
 
   .coffee-note {

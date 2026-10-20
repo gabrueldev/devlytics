@@ -10,6 +10,7 @@ export const pt = {
     label: "Navegação principal",
     install: "Como instalar",
     features: "O que você vê",
+    coffee: "Café",
     privacy: "Privacidade",
     faq: "Perguntas",
     switchLanguage: "English",
@@ -107,6 +108,10 @@ export const pt = {
       "Ignora bots e o seu próprio computador",
       "Só números agregados, nada que identifique alguém",
     ],
+  },
+  coffeeSection: {
+    title: "Me pague um café",
+    sub: "O Devlytics é grátis e vai continuar assim. Se ele te ajudar, um café ajuda a manter tudo no ar.",
   },
   free: {
     title: "Grátis. De verdade.",

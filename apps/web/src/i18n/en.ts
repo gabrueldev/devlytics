@@ -12,6 +12,7 @@ export const en: Dictionary = {
     label: "Main navigation",
     install: "Install",
     features: "What you see",
+    coffee: "Coffee",
     privacy: "Privacy",
     faq: "Questions",
     switchLanguage: "Português",
@@ -109,6 +110,10 @@ export const en: Dictionary = {
       "Ignores bots and your own machine",
       "Aggregated numbers only, nothing that identifies a person",
     ],
+  },
+  coffeeSection: {
+    title: "Buy me a coffee",
+    sub: "Devlytics is free and will stay that way. If it helps you, a coffee helps keep it running.",
   },
   free: {
     title: "Free. For real.",

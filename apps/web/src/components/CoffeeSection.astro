@@ -1,0 +1,26 @@
+---
+import { dictionaryFor, type Locale } from "../i18n";
+import Coffee from "./Coffee.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale);
+---
+
+<section class="section coffee-section" id="coffee">
+  <div class="container coffee-inner reveal">
+    <h2 class="section-title">{t.coffeeSection.title}</h2>
+    <p class="section-sub">{t.coffeeSection.sub}</p>
+    <Coffee locale={locale} plain />
+  </div>
+</section>
+
+<style>
+  .coffee-inner {
+    max-width: 40rem;
+    text-align: center;
+  }
+</style>

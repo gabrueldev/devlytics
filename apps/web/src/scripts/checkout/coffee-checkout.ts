@@ -4,6 +4,7 @@ import { loadCaktoSdk } from "./cakto-sdk";
 import { cardFieldsOf } from "./card-form";
 import { CheckoutApi, CheckoutError } from "./checkout-api";
 import { checkoutFingerprint } from "./fingerprint";
+import { applyInputMasks } from "./input-masks";
 import { PixPanel } from "./pix-panel";
 import { waitForPayment } from "./wait-for-payment";
 
@@ -179,6 +180,7 @@ function startCheckout(root: HTMLElement): void {
     showStep("form");
   });
 
+  applyInputMasks(form);
   onMethodChange();
 }
 

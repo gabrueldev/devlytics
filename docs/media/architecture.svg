@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="440" viewBox="0 0 960 440" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Devlytics layers: apps, adapters, core and shared, with dependencies pointing inward</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#7f9bff"/>
+    </marker>
+  </defs>
+  <rect width="960" height="440" rx="20" fill="#0f1117"/>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+    <rect x="32" y="40" width="500" height="360" rx="14" fill="#151927" stroke="#3a4157"/>
+    <text x="54" y="72" fill="#e8ebf5" font-weight="700">apps/</text>
+    <text x="150" y="72" fill="#9aa3bd">HTTP routes, cron, wiring</text>
+
+    <rect x="56" y="92" width="452" height="284" rx="12" fill="#1a2033" stroke="#45507a"/>
+    <text x="78" y="124" fill="#e8ebf5" font-weight="700">adapters/</text>
+    <text x="174" y="124" fill="#9aa3bd">Analytics Engine, D1, Cakto, Resend</text>
+
+    <rect x="80" y="144" width="404" height="208" rx="10" fill="#1f2a4d" stroke="#4f66c7"/>
+    <text x="102" y="176" fill="#e8ebf5" font-weight="700">core/</text>
+    <text x="174" y="176" fill="#b9c6ff">business rules + ports</text>
+
+    <rect x="104" y="196" width="356" height="132" rx="8" fill="#2f5bff"/>
+    <text x="126" y="228" fill="#ffffff" font-weight="700">shared/</text>
+    <text x="198" y="228" fill="#e3e9ff">types and contracts (Zod)</text>
+    <text x="126" y="268" fill="#e3e9ff" font-size="12.5">CollectPayload, TrackedEvent,</text>
+    <text x="126" y="290" fill="#e3e9ff" font-size="12.5">the shape every event travels in</text>
+  </g>
+
+  <g fill="none" stroke="#7f9bff" stroke-width="1.6" marker-end="url(#arrow)">
+    <path d="M560 168 C536 168 524 175 496 175"/>
+  </g>
+
+  <g fill="#e8ebf5">
+    <text x="568" y="78" font-size="20" font-weight="700">Dependencies only point inward</text>
+    <text x="568" y="112" font-size="14" fill="#9aa3bd">The rules sit in the middle. Every vendor</text>
+    <text x="568" y="132" font-size="14" fill="#9aa3bd">stays on the outside, behind a port.</text>
+
+    <g font-size="14.5">
+      <circle cx="576" cy="179" r="4" fill="#7f9bff"/>
+      <text x="592" y="184"><tspan font-family="ui-monospace, Menlo, monospace">apps</tspan> knows adapters and core</text>
+      <circle cx="576" cy="211" r="4" fill="#7f9bff"/>
+      <text x="592" y="216"><tspan font-family="ui-monospace, Menlo, monospace">adapters</tspan> knows core</text>
+      <circle cx="576" cy="243" r="4" fill="#7f9bff"/>
+      <text x="592" y="248"><tspan font-family="ui-monospace, Menlo, monospace">core</tspan> knows nobody</text>
+    </g>
+
+    <rect x="568" y="276" width="360" height="124" rx="12" fill="#151927" stroke="#3a4157"/>
+    <text x="588" y="306" font-size="13.5" fill="#9aa3bd">core never imports Cloudflare, Hono,</text>
+    <text x="588" y="326" font-size="13.5" fill="#9aa3bd">D1 or Cakto. It says what it needs through</text>
+    <text x="588" y="346" font-size="13.5" fill="#9aa3bd">an interface, and each Worker plugs the</text>
+    <text x="588" y="366" font-size="13.5" fill="#9aa3bd">real adapter in a small container.</text>
+    <text x="588" y="386" font-size="13.5" fill="#7f9bff">Swap a vendor without touching a rule.</text>
+  </g>
+</svg>

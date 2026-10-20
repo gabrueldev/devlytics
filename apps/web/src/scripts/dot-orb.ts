@@ -207,10 +207,10 @@ function startOrb(canvas: HTMLCanvasElement, area: HTMLElement, ring: HTMLElemen
       dot.offsetY = 0;
     }
     draw(startedAt);
-    window.addEventListener("resize", () => {
+    new ResizeObserver(() => {
       measure();
       draw(startedAt);
-    });
+    }).observe(canvas);
     return;
   }
 
@@ -260,7 +260,7 @@ function startOrb(canvas: HTMLCanvasElement, area: HTMLElement, ring: HTMLElemen
   area.addEventListener("pointerup", (event) => {
     if (event.pointerType !== "mouse") release();
   });
-  window.addEventListener("resize", measure);
+  new ResizeObserver(measure).observe(canvas);
   void document.fonts.ready.then(measure);
   document.addEventListener("visibilitychange", start);
   if ("IntersectionObserver" in window) {

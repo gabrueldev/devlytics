@@ -132,6 +132,11 @@ export const pt = {
     sub: "Ele ajuda a manter o Devlytics grátis para todo mundo.",
     price: "R$ 12,61",
     priceNote: "≈ US$ 2,50, cobrado em reais",
+    perks: [
+      "Pix cai na hora, e o cartão passa pela verificação do banco.",
+      "Os dados do cartão vão direto para a Cakto.",
+      "Cada café mantém o Devlytics grátis e sem anúncios.",
+    ],
     back: "Voltar",
     methods: { label: "Forma de pagamento", pix: "Pix", card: "Cartão" },
     fields: {
@@ -184,6 +189,11 @@ export const pt = {
       sub: "Login com GitHub. Só pedimos nome, e-mail e foto, nada dos seus repositórios.",
       button: "Entrar com GitHub",
       failed: "Não deu para entrar com o GitHub. Tente de novo.",
+      perks: [
+        "Nenhum acesso aos seus repositórios",
+        "Sem senha nova: o GitHub cuida do login",
+        "Grátis, sem cartão de crédito",
+      ],
     },
     signOut: "Sair",
     sites: "Seus sites",

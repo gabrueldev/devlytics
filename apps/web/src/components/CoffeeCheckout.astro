@@ -11,6 +11,9 @@ interface Props {
 const { locale } = Astro.props;
 const t = dictionaryFor(locale).checkout;
 const home = homePathFor(locale);
+const { locale: numberLocale, free } = dictionaryFor(locale);
+const { coffee } = free;
+const beans = ["bean-a", "bean-b", "bean-c"];
 ---
 
 <main
@@ -31,24 +34,67 @@ const home = homePathFor(locale);
     <a class="checkout-back" href={home}>{t.back}</a>
   </header>
 
-  <section class="checkout-card glass-plate" aria-live="polite">
-    <div class="checkout-head">
-      <span class="checkout-cup liquid-glass"><CoffeeCup size={26} /></span>
-      <div>
+  <div class="checkout-stage">
+    <aside class="checkout-showcase">
+      <div class="showcase-art" aria-hidden="true">
+        <span class="showcase-glow"></span>
+        <img class="showcase-cup" src="/coffee/cup.webp" width="715" height="494" alt="" decoding="async" />
+        {
+          beans.map((bean) => (
+            <img class={`showcase-bean ${bean}`} src="/coffee/bean.webp" width="144" height="191" alt="" decoding="async" />
+          ))
+        }
+      </div>
+      <div class="showcase-copy">
         <h1>{t.title}</h1>
         <p class="checkout-sub">{t.sub}</p>
+        <p class="checkout-price">
+          <strong>{t.price}</strong>
+          <span>{t.priceNote}</span>
+        </p>
+        <p class="checkout-count" data-coffee data-one={coffee.one} data-many={coffee.many} data-locale={numberLocale}>
+          <span data-coffee-count hidden></span>
+        </p>
       </div>
-      <p class="checkout-price">
-        <strong>{t.price}</strong>
-        <span>{t.priceNote}</span>
-      </p>
-    </div>
+    </aside>
 
+    <ul class="checkout-perks">
+      {
+        t.perks.map((perk) => (
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="m3.5 8.5 3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            {perk}
+          </li>
+        ))
+      }
+    </ul>
+
+  <section class="checkout-card glass-plate" aria-live="polite">
     <form class="checkout-form" data-step-panel="form" novalidate>
       <fieldset class="checkout-methods">
         <legend class="sr-only">{t.methods.label}</legend>
-        <label><input type="radio" name="method" value="pix" checked /><span>{t.methods.pix}</span></label>
-        <label><input type="radio" name="method" value="card" /><span>{t.methods.card}</span></label>
+        <label>
+          <input type="radio" name="method" value="pix" checked />
+          <span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 1.8 14.2 8 8 14.2 1.8 8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              <path d="M5.4 8 8 5.4 10.6 8 8 10.6Z" fill="currentColor" />
+            </svg>
+            {t.methods.pix}
+          </span>
+        </label>
+        <label>
+          <input type="radio" name="method" value="card" />
+          <span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="1.8" y="3.5" width="12.4" height="9" rx="1.8" stroke="currentColor" stroke-width="1.5" />
+              <path d="M1.8 6.6h12.4M4.5 10h2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            {t.methods.card}
+          </span>
+        </label>
       </fieldset>
 
       <div class="checkout-fields">
@@ -101,7 +147,10 @@ const home = homePathFor(locale);
     <div class="checkout-pix" data-step-panel="pix" hidden>
       <h2>{t.pix.title}</h2>
       <p class="checkout-sub">{t.pix.scan}</p>
-      <div class="pix-qr" data-pix-qr></div>
+      <div class="pix-frame">
+        <div class="pix-qr" data-pix-qr></div>
+        <span class="pix-scan" aria-hidden="true"></span>
+      </div>
       <button class="btn pix-copy liquid-glass" type="button" data-pix-copy>
         <span data-pix-copy-label>{t.pix.copy}</span>
       </button>
@@ -118,12 +167,13 @@ const home = homePathFor(locale);
     </div>
 
     <div class="checkout-paid" data-step-panel="paid" hidden>
-      <span class="paid-cup liquid-glass"><CoffeeCup size={34} /></span>
+      <span class="paid-cup liquid-glass"><CoffeeCup size={34} /><span class="paid-ring" aria-hidden="true"></span></span>
       <h2>{t.paid.title}</h2>
       <p class="checkout-sub">{t.paid.text}</p>
       <a class="btn btn-primary" href={home}>{t.paid.home}</a>
     </div>
   </section>
+  </div>
 </main>
 
 <script>
@@ -133,8 +183,8 @@ const home = homePathFor(locale);
 <style>
   .checkout {
     display: grid;
-    gap: 2rem;
-    max-width: 40rem;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    max-width: 68rem;
     min-height: 100vh;
     padding-block: 1.5rem 4rem;
     align-content: start;
@@ -155,31 +205,84 @@ const home = homePathFor(locale);
     font-size: 0.92rem;
   }
 
-  .checkout-card {
+  .checkout-stage {
     display: grid;
-    gap: 1.75rem;
-    padding: clamp(1.25rem, 4vw, 2.25rem);
+    gap: 1.5rem;
+    max-width: 34rem;
+    width: 100%;
+    margin-inline: auto;
   }
 
-  .checkout-head {
+  .checkout-showcase {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem 1.1rem;
-    align-items: center;
+    gap: 0.5rem;
+    justify-items: center;
+    text-align: center;
   }
 
-  .checkout-cup,
-  .paid-cup {
-    display: grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
+  .showcase-art {
+    position: relative;
+    width: min(62vw, 15rem);
+    padding: 6% 4%;
+  }
+
+  .showcase-glow {
+    position: absolute;
+    inset: 4% 0;
     border-radius: 50%;
-    color: var(--brand);
+    background: radial-gradient(closest-side, rgba(196, 122, 52, 0.28), rgba(196, 122, 52, 0));
+    filter: blur(22px);
+  }
+
+  .showcase-cup {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 26px 26px rgba(70, 36, 12, 0.16));
+    animation: cup-in 0.9s var(--ease) both;
+  }
+
+  .showcase-bean {
+    position: absolute;
+    width: var(--size);
+    height: auto;
+    transform: rotate(var(--turn));
+    filter: drop-shadow(0 10px 12px rgba(70, 36, 12, 0.22)) blur(var(--blur, 0));
+    animation: bean-float var(--pace) ease-in-out var(--delay) infinite alternate;
+  }
+
+  .bean-a {
+    --size: clamp(2rem, 6vw, 3.4rem);
+    --turn: -28deg;
+    --pace: 5.5s;
+    --delay: 0s;
+    top: 0;
+    left: -4%;
+  }
+
+  .bean-b {
+    --size: clamp(1.5rem, 4.4vw, 2.4rem);
+    --turn: 38deg;
+    --pace: 6.5s;
+    --delay: -2s;
+    --blur: 1px;
+    top: -6%;
+    right: 8%;
+  }
+
+  .bean-c {
+    --size: clamp(1.8rem, 5vw, 2.8rem);
+    --turn: 74deg;
+    --pace: 6s;
+    --delay: -1s;
+    bottom: 0;
+    right: -6%;
   }
 
   h1 {
-    font-size: clamp(1.7rem, 5vw, 2.2rem);
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    letter-spacing: -0.03em;
   }
 
   h2 {
@@ -191,25 +294,72 @@ const home = homePathFor(locale);
     font-size: 0.95rem;
   }
 
+  .showcase-copy {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: center;
+  }
+
   .checkout-price {
-    grid-column: 1 / -1;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
+    justify-content: center;
     gap: 0.25rem 0.75rem;
-    padding-top: 1.1rem;
-    border-top: 1px solid var(--line);
+    margin-top: 0.4rem;
   }
 
   .checkout-price strong {
     font-family: var(--font-display);
-    font-size: 1.9rem;
-    letter-spacing: -0.02em;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    letter-spacing: -0.03em;
+    color: #8a4b1c;
   }
 
   .checkout-price span {
     color: var(--text-mute);
     font-size: 0.88rem;
+  }
+
+  .checkout-count {
+    color: var(--text-mute);
+    font-size: 0.85rem;
+  }
+
+  .checkout-count:has([hidden]) {
+    display: none;
+  }
+
+  .checkout-perks {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    order: 1;
+  }
+
+  .checkout-perks li {
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    gap: 0.6rem;
+    align-items: center;
+    color: var(--text-soft);
+    font-size: 0.92rem;
+  }
+
+  .checkout-perks svg {
+    box-sizing: content-box;
+    padding: 0.25rem;
+    border-radius: 50%;
+    background: rgba(var(--brand-rgb), 0.1);
+    color: var(--brand);
+  }
+
+  .checkout-card {
+    display: grid;
+    gap: 1.75rem;
+    padding: clamp(1.25rem, 4vw, 2.25rem);
   }
 
   .checkout-form {
@@ -218,6 +368,7 @@ const home = homePathFor(locale);
   }
 
   .checkout-methods {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.35rem;
@@ -226,6 +377,24 @@ const home = homePathFor(locale);
     border: 0;
     border-radius: 999px;
     background: var(--bg-raised);
+    box-shadow: inset 0 1px 2px rgba(17, 17, 22, 0.06);
+  }
+
+  .checkout-methods::before {
+    content: "";
+    position: absolute;
+    top: 0.3rem;
+    bottom: 0.3rem;
+    left: 0.3rem;
+    width: calc(50% - 0.475rem);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    transition: translate 0.45s var(--ease);
+  }
+
+  .checkout-methods:has(input[value="card"]:checked)::before {
+    translate: calc(100% + 0.35rem) 0;
   }
 
   .checkout-methods label {
@@ -239,22 +408,23 @@ const home = homePathFor(locale);
   }
 
   .checkout-methods span {
-    display: block;
-    padding: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem;
     border-radius: 999px;
-    text-align: center;
     font-weight: 600;
     color: var(--text-soft);
-    transition:
-      background 0.25s var(--ease),
-      color 0.25s var(--ease),
-      box-shadow 0.25s var(--ease);
+    transition: color 0.25s var(--ease);
   }
 
   .checkout-methods input:checked + span {
-    background: var(--surface);
     color: var(--text);
-    box-shadow: var(--shadow-sm);
+  }
+
+  .checkout-methods input:checked + span svg {
+    color: var(--brand);
   }
 
   .checkout-methods input:focus-visible + span {
@@ -266,6 +436,10 @@ const home = homePathFor(locale);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+  }
+
+  .checkout-card-fields:not([hidden]) {
+    animation: fields-in 0.45s var(--ease);
   }
 
   .field {
@@ -281,23 +455,31 @@ const home = homePathFor(locale);
 
   .field input {
     width: 100%;
-    padding: 0.75rem 0.9rem;
+    padding: 0.8rem 0.95rem;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius);
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.78);
     font: inherit;
     font-size: 1rem;
     font-weight: 400;
     color: var(--text);
     transition:
       border-color 0.2s var(--ease),
-      box-shadow 0.2s var(--ease);
+      box-shadow 0.25s var(--ease),
+      background 0.2s var(--ease);
+  }
+
+  .field input:hover {
+    background: var(--surface);
   }
 
   .field input:focus {
     outline: none;
     border-color: var(--brand);
-    box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.15);
+    background: var(--surface);
+    box-shadow:
+      0 0 0 4px rgba(var(--brand-rgb), 0.14),
+      0 8px 24px -8px rgba(var(--brand-rgb), 0.35);
   }
 
   .field input[aria-invalid="true"] {
@@ -322,6 +504,7 @@ const home = homePathFor(locale);
   .checkout-submit {
     justify-content: center;
     width: 100%;
+    padding-block: 0.95rem;
   }
 
   .checkout-submit:disabled {
@@ -337,8 +520,23 @@ const home = homePathFor(locale);
     text-align: center;
   }
 
+  .pix-frame {
+    --corner: linear-gradient(var(--brand), var(--brand));
+    position: relative;
+    width: min(16.5rem, 100%);
+    padding: 0.75rem;
+    background:
+      var(--corner) top left / 1.75rem 3px no-repeat,
+      var(--corner) top left / 3px 1.75rem no-repeat,
+      var(--corner) top right / 1.75rem 3px no-repeat,
+      var(--corner) top right / 3px 1.75rem no-repeat,
+      var(--corner) bottom left / 1.75rem 3px no-repeat,
+      var(--corner) bottom left / 3px 1.75rem no-repeat,
+      var(--corner) bottom right / 1.75rem 3px no-repeat,
+      var(--corner) bottom right / 3px 1.75rem no-repeat;
+  }
+
   .pix-qr {
-    width: min(15rem, 100%);
     padding: 0.9rem;
     border-radius: var(--radius-lg);
     background: #fff;
@@ -346,8 +544,35 @@ const home = homePathFor(locale);
   }
 
   .pix-qr :global(svg) {
+    display: block;
     width: 100%;
     height: auto;
+  }
+
+  .pix-scan {
+    position: absolute;
+    inset: 0.75rem;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+  }
+
+  .pix-scan::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--brand-rgb), 0) 0%,
+      rgba(var(--brand-rgb), 0.12) 7%,
+      rgba(var(--brand-rgb), 0.7) 8%,
+      rgba(var(--brand-rgb), 0) 8.6%
+    );
+    animation: pix-scan 2.6s ease-in-out infinite alternate;
+  }
+
+  .checkout-pix:has([data-pix-expired]:not([hidden])) .pix-scan {
+    display: none;
   }
 
   .pix-copy {
@@ -389,8 +614,55 @@ const home = homePathFor(locale);
   }
 
   .paid-cup {
+    position: relative;
+    display: grid;
+    place-items: center;
     width: 5rem;
     height: 5rem;
+    border-radius: 50%;
+    color: var(--brand);
+  }
+
+  .paid-ring {
+    position: absolute;
+    inset: -2px;
+    border: 2px solid rgba(var(--brand-rgb), 0.45);
+    border-radius: 50%;
+    animation: paid-ring 1.8s var(--ease) infinite;
+  }
+
+  .checkout-paid:not([hidden]) {
+    animation: fields-in 0.6s var(--ease);
+  }
+
+  @keyframes bean-float {
+    to {
+      transform: translate3d(0, -0.6rem, 0) rotate(calc(var(--turn) + 10deg));
+    }
+  }
+
+  @keyframes cup-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+    }
+  }
+
+  @keyframes fields-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  @keyframes pix-scan {
+    from {
+      transform: translateY(-8%);
+    }
+
+    to {
+      transform: translateY(92%);
+    }
   }
 
   @keyframes pix-pulse {
@@ -400,17 +672,83 @@ const home = homePathFor(locale);
     }
   }
 
+  @keyframes paid-ring {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(1.6);
+    }
+  }
+
   @media (max-width: 520px) {
     .checkout-fields {
       grid-template-columns: 1fr;
     }
   }
 
+  @media (min-width: 900px) {
+    .checkout {
+      padding-bottom: 6rem;
+    }
+
+    .checkout-stage {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+      grid-template-areas:
+        "showcase card"
+        "perks card";
+      gap: 1.5rem clamp(3rem, 6vw, 5rem);
+      max-width: none;
+      align-items: start;
+      margin-top: 2vh;
+    }
+
+    .checkout-showcase {
+      grid-area: showcase;
+      justify-items: start;
+      text-align: left;
+    }
+
+    .showcase-copy {
+      justify-items: start;
+    }
+
+    .checkout-price {
+      justify-content: start;
+    }
+
+    .showcase-art {
+      width: min(100%, 22rem);
+      margin-left: -1rem;
+    }
+
+    .checkout-perks {
+      grid-area: perks;
+      order: 0;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .checkout-card {
+      grid-area: card;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .pix-dot {
+    .pix-dot,
+    .showcase-bean,
+    .showcase-cup,
+    .paid-ring,
+    .pix-scan::after,
+    .checkout-card-fields:not([hidden]),
+    .checkout-paid:not([hidden]) {
       animation: none;
     }
 
+    .checkout-methods::before,
     .checkout-methods span,
     .field input {
       transition: none;

@@ -134,6 +134,11 @@ export const en: Dictionary = {
     sub: "It helps keep Devlytics free for everyone.",
     price: "R$ 12.61",
     priceNote: "≈ US$ 2.50, charged in Brazilian reais",
+    perks: [
+      "Pix lands instantly, and cards go through your bank's verification.",
+      "Card details go straight to Cakto.",
+      "Every coffee keeps Devlytics free and ad-free.",
+    ],
     back: "Back",
     methods: { label: "Payment method", pix: "Pix", card: "Card" },
     fields: {
@@ -186,6 +191,11 @@ export const en: Dictionary = {
       sub: "Sign in with GitHub. We only ask for your name, e-mail and photo, nothing from your repositories.",
       button: "Sign in with GitHub",
       failed: "GitHub sign-in did not work. Try again.",
+      perks: [
+        "No access to your repositories",
+        "No new password: GitHub handles sign-in",
+        "Free, no credit card",
+      ],
     },
     signOut: "Sign out",
     sites: "Your sites",

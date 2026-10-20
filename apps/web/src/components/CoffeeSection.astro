@@ -9,9 +9,15 @@ interface Props {
 const { locale } = Astro.props;
 const t = dictionaryFor(locale);
 const beans = ["bean-a", "bean-b", "bean-c", "bean-d"];
+const edgeBeans = ["edge-a", "edge-b", "edge-c"];
 ---
 
 <section class="section coffee-section" id="coffee">
+  {
+    edgeBeans.map((bean) => (
+      <img class={`edge-bean ${bean}`} src="/coffee/bean.webp" width="144" height="191" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+    ))
+  }
   <div class="container coffee-layout">
     <div class="coffee-copy reveal">
       <h2 class="section-title">{t.coffeeSection.title}</h2>
@@ -33,7 +39,53 @@ const beans = ["bean-a", "bean-b", "bean-c", "bean-d"];
 
 <style>
   .coffee-section {
+    position: relative;
     overflow: clip;
+  }
+
+  .coffee-layout {
+    position: relative;
+    z-index: 1;
+  }
+
+  .edge-bean {
+    position: absolute;
+    width: var(--size);
+    height: auto;
+    transform: rotate(var(--turn));
+    filter: drop-shadow(0 24px 30px rgba(70, 36, 12, 0.22)) blur(var(--blur));
+    animation: bean-float var(--pace) ease-in-out var(--delay) infinite alternate;
+    pointer-events: none;
+  }
+
+  .edge-a {
+    --size: clamp(8rem, 22vw, 17rem);
+    --turn: 24deg;
+    --blur: 3px;
+    --pace: 8s;
+    --delay: -1s;
+    bottom: -9rem;
+    left: 22%;
+  }
+
+  .edge-b {
+    --size: clamp(6rem, 16vw, 12rem);
+    --turn: -48deg;
+    --blur: 4px;
+    --pace: 9s;
+    --delay: -4s;
+    top: -2.5rem;
+    right: -2rem;
+  }
+
+  .edge-c {
+    --size: clamp(4.5rem, 10vw, 7.5rem);
+    --turn: 112deg;
+    --blur: 1.5px;
+    --pace: 7s;
+    --delay: -2.5s;
+    top: -1.5rem;
+    left: 6%;
   }
 
   .coffee-layout {
@@ -121,8 +173,20 @@ const beans = ["bean-a", "bean-b", "bean-c", "bean-d"];
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .coffee-bean {
+    .coffee-bean,
+    .edge-bean {
       animation: none;
+    }
+  }
+
+  @media (max-width: 859px) {
+    .edge-a {
+      bottom: -5rem;
+      left: -3rem;
+    }
+
+    .edge-c {
+      display: none;
     }
   }
 

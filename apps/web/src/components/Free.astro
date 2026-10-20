@@ -1,5 +1,6 @@
 ---
 import { dictionaryFor, type Locale } from "../i18n";
+import Coffee from "./Coffee.astro";
 
 interface Props {
   locale: Locale;
@@ -21,6 +22,7 @@ const t = dictionaryFor(locale);
         <path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
     </a>
+    <Coffee locale={locale} />
   </div>
 </section>
 

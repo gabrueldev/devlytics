@@ -1,0 +1,83 @@
+---
+import { coffeeCheckoutUrl } from "../config/coffee";
+import { dictionaryFor, type Locale } from "../i18n";
+import CoffeeCup from "./CoffeeCup.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { coffee } = dictionaryFor(locale).free;
+---
+
+<div class="coffee" data-coffee data-one={coffee.one} data-many={coffee.many} data-locale={dictionaryFor(locale).locale}>
+  <p class="coffee-note">{coffee.note}</p>
+  <a class="btn btn-primary coffee-button" href={coffeeCheckoutUrl} rel="noopener" data-track="coffee">
+    <CoffeeCup />
+    <span>{coffee.button}</span>
+    <span class="coffee-price">
+      {coffee.price}
+      {coffee.local && <small>({coffee.local})</small>}
+    </span>
+  </a>
+  {coffee.local && <p class="coffee-local">{coffee.charged.replace("{amount}", coffee.local)}</p>}
+  <p class="coffee-count" data-coffee-count hidden></p>
+</div>
+
+<style>
+  .coffee {
+    display: grid;
+    justify-items: center;
+    gap: 0.9rem;
+    margin-top: 3rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .coffee-note {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .coffee-button {
+    white-space: nowrap;
+  }
+
+  .coffee-local {
+    display: none;
+    color: var(--text-mute);
+    font-size: 0.8rem;
+    margin-top: -0.35rem;
+  }
+
+  .coffee-price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding-left: 0.7rem;
+    margin-left: 0.15rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .coffee-price small {
+    font-weight: 500;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 30rem) {
+    .coffee-price small {
+      display: none;
+    }
+
+    .coffee-local {
+      display: block;
+    }
+  }
+
+  .coffee-count {
+    color: var(--text-mute);
+    font-size: 0.85rem;
+  }
+</style>

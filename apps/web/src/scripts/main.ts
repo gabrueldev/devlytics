@@ -1,3 +1,4 @@
+import { showCoffeeCount } from "./coffee-count";
 import { enableTagCopy } from "./copy-tag";
 import { loadLiveDemo } from "./live-demo";
 import { trackNavScroll } from "./nav-state";
@@ -11,3 +12,4 @@ enableTagCopy();
 typeInstallTag();
 scrambleOnReveal();
 void loadLiveDemo();
+void showCoffeeCount();

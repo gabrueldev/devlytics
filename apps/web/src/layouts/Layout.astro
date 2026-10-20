@@ -6,12 +6,16 @@ import { dictionaryFor, homePathFor, type Locale } from "../i18n";
 
 interface Props {
   locale: Locale;
+  title?: string;
+  path?: string;
+  noindex?: boolean;
 }
 
-const { locale } = Astro.props;
+const { locale, path, noindex = false } = Astro.props;
 const t = dictionaryFor(locale);
+const title = Astro.props.title ?? t.meta.title;
 const site = Astro.site?.origin ?? "https://devlytics.gabrueldev.com";
-const canonical = new URL(homePathFor(locale), site).href;
+const canonical = new URL(path ?? homePathFor(locale), site).href;
 const fonts =
   "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..800&family=Poppins:wght@400;500;600&display=swap";
 ---
@@ -22,7 +26,8 @@ const fonts =
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f3f4f6" />
-    <title>{t.meta.title}</title>
+    <title>{title}</title>
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="description" content={t.meta.description} />
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="pt-BR" href={new URL(homePathFor("pt"), site).href} />
@@ -31,7 +36,7 @@ const fonts =
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Devlytics" />
-    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={t.meta.description} />
     <meta name="twitter:card" content="summary" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

@@ -80,7 +80,7 @@ export class CaktoPaymentGateway implements PaymentGateway {
       await this.tokens.forget();
       return this.createPayment(idempotencyKey, body, true);
     }
-    if (!response.ok) throw new PaymentRejectedError(response.status);
+    if (!response.ok) throw new PaymentRejectedError(response.status, (await response.text()).slice(0, 500));
 
     return (await response.json()) as CaktoOrder;
   }

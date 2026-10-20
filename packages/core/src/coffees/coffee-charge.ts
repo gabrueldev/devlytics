@@ -21,7 +21,10 @@ export interface CardCharge {
 }
 
 export class PaymentRejectedError extends Error {
-  constructor(readonly status: number) {
+  constructor(
+    readonly status: number,
+    readonly detail = "",
+  ) {
     super(`Payment provider rejected the charge with status ${status}`);
     this.name = "PaymentRejectedError";
   }

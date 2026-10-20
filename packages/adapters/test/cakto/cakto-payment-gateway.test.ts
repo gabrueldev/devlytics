@@ -111,7 +111,7 @@ describe("CaktoPaymentGateway", () => {
   it("reports a refused charge with the provider status", async () => {
     const { send } = fakeCakto([new Response(null, { status: 400 })]);
 
-    await expect(gatewayWith(send).chargePix(pixRequest)).rejects.toEqual(new PaymentRejectedError(400));
+    await expect(gatewayWith(send).chargePix(pixRequest)).rejects.toMatchObject({ status: 400 });
   });
 
   it("takes the token another instance already issued instead of asking Cakto again", async () => {

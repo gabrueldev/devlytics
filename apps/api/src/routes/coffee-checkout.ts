@@ -71,7 +71,10 @@ async function charging(c: Context<AppEnv>, charge: () => Promise<Response>): Pr
   try {
     return await charge();
   } catch (error) {
-    if (error instanceof PaymentRejectedError) return c.json({ error: "payment_rejected" }, 502);
+    if (error instanceof PaymentRejectedError) {
+      console.warn("Cakto rejected the charge", { status: error.status, detail: error.detail });
+      return c.json({ error: "payment_rejected" }, 502);
+    }
     throw error;
   }
 }

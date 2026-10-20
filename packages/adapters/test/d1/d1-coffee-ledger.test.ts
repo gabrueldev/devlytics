@@ -40,4 +40,16 @@ describe("D1CoffeeLedger", () => {
 
     await expect(ledger.countKept()).resolves.toBe(0);
   });
+
+  it("tells a paid order apart from one that is waiting or was refunded", async () => {
+    const ledger = new D1CoffeeLedger(db);
+
+    await ledger.recordPaid("order_1", firstAt);
+    await ledger.recordPaid("order_2", firstAt);
+    await ledger.recordReversed("order_2", laterAt);
+
+    await expect(ledger.isPaid("order_1")).resolves.toBe(true);
+    await expect(ledger.isPaid("order_2")).resolves.toBe(false);
+    await expect(ledger.isPaid("order_3")).resolves.toBe(false);
+  });
 });

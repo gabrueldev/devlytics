@@ -1,0 +1,419 @@
+---
+import { caktoSdkClientId, coffeeApiUrl, coffeePriceCents } from "../config/coffee";
+import { dictionaryFor, homePathFor, type Locale } from "../i18n";
+import CoffeeCup from "./CoffeeCup.astro";
+import Logo from "./Logo.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = dictionaryFor(locale).checkout;
+const home = homePathFor(locale);
+---
+
+<main
+  id="main"
+  class="checkout container"
+  data-checkout
+  data-step="form"
+  data-api={coffeeApiUrl}
+  data-sdk-client-id={caktoSdkClientId}
+  data-amount={coffeePriceCents}
+  data-copied={t.pix.copied}
+  data-expires-in={t.pix.expiresIn}
+  data-pending={t.pending}
+  data-errors={JSON.stringify(t.errors)}
+>
+  <header class="checkout-top">
+    <a href={home} aria-label="Devlytics"><Logo /></a>
+    <a class="checkout-back" href={home}>{t.back}</a>
+  </header>
+
+  <section class="checkout-card glass-plate" aria-live="polite">
+    <div class="checkout-head">
+      <span class="checkout-cup liquid-glass"><CoffeeCup size={26} /></span>
+      <div>
+        <h1>{t.title}</h1>
+        <p class="checkout-sub">{t.sub}</p>
+      </div>
+      <p class="checkout-price">
+        <strong>{t.price}</strong>
+        <span>{t.priceNote}</span>
+      </p>
+    </div>
+
+    <form class="checkout-form" data-step-panel="form" novalidate>
+      <fieldset class="checkout-methods">
+        <legend class="sr-only">{t.methods.label}</legend>
+        <label><input type="radio" name="method" value="pix" checked /><span>{t.methods.pix}</span></label>
+        <label><input type="radio" name="method" value="card" /><span>{t.methods.card}</span></label>
+      </fieldset>
+
+      <div class="checkout-fields">
+        <label class="field field--wide">
+          <span>{t.fields.name}</span>
+          <input name="name" autocomplete="name" required minlength="3" maxlength="120" />
+        </label>
+        <label class="field">
+          <span>{t.fields.email}</span>
+          <input name="email" type="email" autocomplete="email" required maxlength="254" />
+        </label>
+        <label class="field">
+          <span>{t.fields.phone}</span>
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder={t.fields.phonePlaceholder} />
+        </label>
+        <label class="field field--wide">
+          <span>{t.fields.cpf}</span>
+          <input name="cpf" inputmode="numeric" autocomplete="off" required={t.cpfRequired} placeholder="000.000.000-00" maxlength="14" />
+          <small>{t.fields.cpfHint}</small>
+        </label>
+      </div>
+
+      <div class="checkout-fields checkout-card-fields" data-card-fields hidden>
+        <label class="field field--wide">
+          <span>{t.fields.cardNumber}</span>
+          <input name="cardNumber" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="0000 0000 0000 0000" />
+        </label>
+        <label class="field field--wide">
+          <span>{t.fields.cardName}</span>
+          <input name="cardName" autocomplete="cc-name" maxlength="120" />
+        </label>
+        <label class="field">
+          <span>{t.fields.cardExpiry}</span>
+          <input name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" maxlength="7" placeholder={t.fields.cardExpiryPlaceholder} />
+        </label>
+        <label class="field">
+          <span>{t.fields.cardCvv}</span>
+          <input name="cardCvv" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="123" />
+        </label>
+        <p class="checkout-secure field--wide">{t.secure}</p>
+      </div>
+
+      <p class="checkout-error" data-error role="alert" hidden></p>
+
+      <button class="btn btn-primary checkout-submit" type="submit" data-label-pix={t.payPix} data-label-card={t.payCard}>
+        <span data-submit-label>{t.payPix}</span>
+      </button>
+    </form>
+
+    <div class="checkout-pix" data-step-panel="pix" hidden>
+      <h2>{t.pix.title}</h2>
+      <p class="checkout-sub">{t.pix.scan}</p>
+      <div class="pix-qr" data-pix-qr></div>
+      <button class="btn pix-copy liquid-glass" type="button" data-pix-copy>
+        <span data-pix-copy-label>{t.pix.copy}</span>
+      </button>
+      <p class="pix-status" data-pix-status><span class="pix-dot" aria-hidden="true"></span>{t.pix.waiting}</p>
+      <p class="pix-timer" data-pix-timer></p>
+      <div class="pix-expired" data-pix-expired hidden>
+        <p>{t.pix.expired}</p>
+        <button class="btn btn-primary" type="button" data-pix-again>{t.pix.again}</button>
+      </div>
+    </div>
+
+    <div class="checkout-pending" data-step-panel="pending" hidden>
+      <p class="pix-status"><span class="pix-dot" aria-hidden="true"></span>{t.pending}</p>
+    </div>
+
+    <div class="checkout-paid" data-step-panel="paid" hidden>
+      <span class="paid-cup liquid-glass"><CoffeeCup size={34} /></span>
+      <h2>{t.paid.title}</h2>
+      <p class="checkout-sub">{t.paid.text}</p>
+      <a class="btn btn-primary" href={home}>{t.paid.home}</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  import "../scripts/checkout/coffee-checkout";
+</script>
+
+<style>
+  .checkout {
+    display: grid;
+    gap: 2rem;
+    max-width: 40rem;
+    min-height: 100vh;
+    padding-block: 1.5rem 4rem;
+    align-content: start;
+  }
+
+  .checkout-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .checkout-top a {
+    text-decoration: none;
+  }
+
+  .checkout-back {
+    color: var(--text-soft);
+    font-size: 0.92rem;
+  }
+
+  .checkout-card {
+    display: grid;
+    gap: 1.75rem;
+    padding: clamp(1.25rem, 4vw, 2.25rem);
+  }
+
+  .checkout-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.1rem;
+    align-items: center;
+  }
+
+  .checkout-cup,
+  .paid-cup {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    color: var(--brand);
+  }
+
+  h1 {
+    font-size: clamp(1.7rem, 5vw, 2.2rem);
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .checkout-sub {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .checkout-price {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .checkout-price strong {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    letter-spacing: -0.02em;
+  }
+
+  .checkout-price span {
+    color: var(--text-mute);
+    font-size: 0.88rem;
+  }
+
+  .checkout-form {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .checkout-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0.3rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--bg-raised);
+  }
+
+  .checkout-methods label {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .checkout-methods input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .checkout-methods span {
+    display: block;
+    padding: 0.6rem;
+    border-radius: 999px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-soft);
+    transition:
+      background 0.25s var(--ease),
+      color 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+
+  .checkout-methods input:checked + span {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .checkout-methods input:focus-visible + span {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  .checkout-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  .field--wide {
+    grid-column: 1 / -1;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text);
+    transition:
+      border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(var(--brand-rgb), 0.15);
+  }
+
+  .field input[aria-invalid="true"] {
+    border-color: #dc2626;
+  }
+
+  .field small,
+  .checkout-secure {
+    color: var(--text-mute);
+    font-size: 0.8rem;
+    font-weight: 400;
+  }
+
+  .checkout-error {
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius);
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 0.9rem;
+  }
+
+  .checkout-submit {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .checkout-submit:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .checkout-pix,
+  .checkout-paid {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .pix-qr {
+    width: min(15rem, 100%);
+    padding: 0.9rem;
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+  }
+
+  .pix-qr :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .pix-copy {
+    border: 1px solid rgba(255, 255, 255, 0.85);
+  }
+
+  .pix-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--text-soft);
+    font-size: 0.92rem;
+  }
+
+  .pix-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--live);
+    animation: pix-pulse 1.4s ease-in-out infinite;
+  }
+
+  .pix-timer {
+    color: var(--text-mute);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pix-expired {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+  }
+
+  .checkout-pending {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .paid-cup {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  @keyframes pix-pulse {
+    50% {
+      opacity: 0.35;
+      transform: scale(0.8);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .checkout-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pix-dot {
+      animation: none;
+    }
+
+    .checkout-methods span,
+    .field input {
+      transition: none;
+    }
+  }
+</style>

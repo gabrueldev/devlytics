@@ -1,6 +1,6 @@
 import type { CoffeeLedger } from "@devlytics/core";
 import { schema, type Database } from "@devlytics/db";
-import { and, count, isNotNull, isNull, sql } from "drizzle-orm";
+import { and, count, eq, isNotNull, isNull, sql } from "drizzle-orm";
 
 const { coffees } = schema;
 
@@ -35,5 +35,15 @@ export class D1CoffeeLedger implements CoffeeLedger {
       .get();
 
     return row?.total ?? 0;
+  }
+
+  async isPaid(orderId: string): Promise<boolean> {
+    const row = await this.db
+      .select({ orderId: coffees.orderId })
+      .from(coffees)
+      .where(and(eq(coffees.orderId, orderId), isNotNull(coffees.paidAt), isNull(coffees.reversedAt)))
+      .get();
+
+    return row !== undefined;
   }
 }

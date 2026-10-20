@@ -22,6 +22,10 @@ body {
   touch-action: manipulation;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 ::selection {
   background: rgba(var(--brand-rgb), 0.18);
 }

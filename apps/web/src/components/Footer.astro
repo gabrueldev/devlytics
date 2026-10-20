@@ -1,6 +1,5 @@
 ---
 import { dictionaryFor, type Locale } from "../i18n";
-import Logo from "./Logo.astro";
 
 interface Props {
   locale: Locale;
@@ -13,7 +12,7 @@ const t = dictionaryFor(locale);
 <footer class="footer">
   <canvas class="footer-soil" data-pixel-soil aria-hidden="true"></canvas>
   <div class="container footer-inner">
-    <Logo />
+    <img class="footer-logo" src="/brand/lockup-light.png" width="360" height="440" alt="Devlytics, developers tracking" loading="lazy" decoding="async" />
     <nav class="footer-links" aria-label="Devlytics">
       <a href="#privacy">{t.footer.privacy}</a>
       <a href="https://gabrueldev.com" rel="noopener">{t.footer.portfolio}</a>
@@ -38,8 +37,9 @@ const t = dictionaryFor(locale);
     pointer-events: none;
   }
 
-  .footer :global(.logo-name b) {
-    color: #8aa4ff;
+  .footer-logo {
+    width: auto;
+    height: clamp(8.5rem, 18vw, 11rem);
   }
 
   .footer-inner {

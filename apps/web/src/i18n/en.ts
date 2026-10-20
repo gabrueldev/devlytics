@@ -20,7 +20,6 @@ export const en: Dictionary = {
     cta: "Sign in",
   },
   hero: {
-    badge: "Free and cookieless",
     titleStart: "Your portfolio,",
     titleAccent: "measured by project.",
     sub: "Find out which projects hold attention, what visitors click and whether the company opened the link you sent. One tag, nothing to configure.",

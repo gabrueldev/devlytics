@@ -18,7 +18,6 @@ export const pt = {
     cta: "Entrar",
   },
   hero: {
-    badge: "Grátis e sem cookies",
     titleStart: "Seu portfólio,",
     titleAccent: "medido por projeto.",
     sub: "Saiba quais projetos prendem a atenção, o que as pessoas clicam e se a empresa abriu o link que você mandou. Uma tag, nada para configurar.",

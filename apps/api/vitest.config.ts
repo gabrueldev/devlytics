@@ -13,6 +13,8 @@ export default defineConfig(async () => {
             TEST_MIGRATIONS: migrations,
             CF_ANALYTICS_TOKEN: "test-token",
             CAKTO_WEBHOOK_SECRET: "test-secret",
+            CAKTO_CLIENT_ID: "test-client",
+            CAKTO_CLIENT_SECRET: "test-client-secret",
           },
         },
       }),

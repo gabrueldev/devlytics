@@ -1,0 +1,10 @@
+---
+import CoffeeCheckout from "../../components/CoffeeCheckout.astro";
+import Layout from "../../layouts/Layout.astro";
+import { coffeePathFor } from "../../config/coffee";
+import { en } from "../../i18n/en";
+---
+
+<Layout locale="en" title={en.checkout.pageTitle} path={coffeePathFor("en")} noindex>
+  <CoffeeCheckout locale="en" />
+</Layout>

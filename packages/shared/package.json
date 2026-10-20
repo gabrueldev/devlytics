@@ -4,7 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./scroll-depths": "./src/scroll-depths.ts"
+    "./scroll-depths": "./src/scroll-depths.ts",
+    "./cpf": "./src/cpf.ts"
   },
   "scripts": {
     "typecheck": "tsc",

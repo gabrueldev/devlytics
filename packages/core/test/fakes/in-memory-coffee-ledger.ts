@@ -23,6 +23,11 @@ export class InMemoryCoffeeLedger implements CoffeeLedger {
       .length;
   }
 
+  async isPaid(orderId: string): Promise<boolean> {
+    const entry = this.entries.get(orderId);
+    return entry !== undefined && entry.paidAt !== null && entry.reversedAt === null;
+  }
+
   private entryOf(orderId: string): Entry {
     const entry = this.entries.get(orderId) ?? { paidAt: null, reversedAt: null };
     this.entries.set(orderId, entry);

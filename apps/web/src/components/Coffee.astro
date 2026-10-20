@@ -1,5 +1,5 @@
 ---
-import { coffeeCheckoutUrl } from "../config/coffee";
+import { coffeePathFor } from "../config/coffee";
 import { dictionaryFor, type Locale } from "../i18n";
 import CoffeeCup from "./CoffeeCup.astro";
 
@@ -13,7 +13,7 @@ const { coffee } = dictionaryFor(locale).free;
 
 <div class="coffee" data-coffee data-one={coffee.one} data-many={coffee.many} data-locale={dictionaryFor(locale).locale}>
   <p class="coffee-note">{coffee.note}</p>
-  <a class="btn btn-primary coffee-button" href={coffeeCheckoutUrl} rel="noopener" data-track="coffee">
+  <a class="btn btn-primary coffee-button" href={coffeePathFor(locale)} data-track="coffee">
     <CoffeeCup />
     <span>{coffee.button}</span>
     <span class="coffee-price">{coffee.price}</span>

@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "devlytics-ingest",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [{ "pattern": "devlytics.gabrueldev.com", "custom_domain": true }],
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "devlytics",
+      "database_id": "2af6c752-881e-4283-ad41-6135fd2b17e7",
+      "migrations_dir": "../../packages/db/migrations",
+    },
+  ],
+}

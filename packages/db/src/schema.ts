@@ -1,0 +1,20 @@
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  githubId: text("github_id").notNull().unique(),
+  email: text("email").notNull(),
+  name: text("name"),
+  isSupporter: integer("is_supporter", { mode: "boolean" }).notNull().default(false),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
+});
+
+export const sites = sqliteTable("sites", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  domain: text("domain").notNull().unique(),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
+});
